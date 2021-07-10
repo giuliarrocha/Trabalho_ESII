@@ -1,0 +1,15 @@
+.cinza {
+    color: rgb(83, 83, 83);
+}
+html,
+body {
+    height: 100%;
+    font-family: 'Red Hat Text', sans-serif;
+}
+
+/* Color Theme Swatches in RGBA */
+.azul-escuro { color: rgba(9, 43, 64, 1); }
+.azul-escuro-claro { color: rgba(15, 61, 89, 1); }
+.rosa-escuro { color: rgba(191, 157, 138, 1); }
+.rosa-claro { color: rgba(242, 193, 174, 1); }
+.branco-diferente { color: rgba(242, 242, 242, 1); }
