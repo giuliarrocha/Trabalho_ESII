@@ -55,12 +55,12 @@
                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                 </svg>
               </a>
-              <!--Se não estiver logado:
+              <!--Se não estiver logado:-->
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Entrar</a></li>
-                <li><a class="dropdown-item" href="#">Cadastrar-se</a></li>
+                <li><a class="dropdown-item" href="login_usuario.html">Entrar</a></li>
+                <li><a class="dropdown-item" href="login_usuario.html">Cadastrar-se</a></li>
               </ul>
-              -->
+              
               <!--Se for área da empresa:
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
@@ -71,23 +71,27 @@
                 <li><a class="dropdown-item" href="#">Feedbacks</a></li>
               </ul>
               -->
+              <!--Se estiver logado
               <ul class="dropdown-menu dropdown-menu-sm-start" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="#">Informações Pessoais</a></li>
                 <li><a class="dropdown-item" href="#">Meus pedidos</a></li>
                 <li><a class="dropdown-item" href="#">Segurança</a></li>
                 <li><a class="dropdown-item" href="#">Pagamento</a></li>
               </ul>
+              -->
             </li>
             <!--Botao Carrinho de compras-->
-            <button type="button" class="btn btn-outline-secondary position-relative rounded-circle mx-4 me-md-5" style="background-color: rgba(242, 193, 174, 1);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-cart" viewBox="0 0 16 16">
-                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-              </svg>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                2
-                <span class="visually-hidden">unread messages</span>
-              </span>
-            </button>
+            <a href="carrinho_compras.html">
+              <button type="button" class="btn btn-outline-secondary position-relative rounded-circle mx-4 me-md-5" style="background-color: rgba(242, 193, 174, 1);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-cart" viewBox="0 0 16 16">
+                  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  2
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </button>
+            </a>
           </ul>
       </div>
     </nav>

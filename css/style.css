@@ -1,6 +1,39 @@
+.letraTitulo {
+    font-size: 40px;
+    text-align: center;
+}
+
+.centro {
+    text-align: center;
+}
+
+.espaco {
+    margin: 100px;
+}
+
+.espaco15 {
+    margin-top: 15px;
+}
+
+.espaco30 {
+    margin-top: 30px;
+}
+
+.espacoD100 {
+    margin-right: 100px;
+}
+
+.bordaDireita {
+    border-right: 1px solid #ccc;
+}
+.bordaEsquerda {
+    border-left: 1px solid #ccc;
+}
+
 .cinza {
     color: rgb(83, 83, 83);
 }
+
 html,
 body {
     height: 100%;
