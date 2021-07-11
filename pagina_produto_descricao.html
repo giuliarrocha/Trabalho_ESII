@@ -8,7 +8,7 @@
    <!-- Bootstrap CSS -->
    <link rel="stylesheet" href="css/bootstrap.min.css">
    <link rel="stylesheet" href="css/style.css" />
-   <title>Carrinho de Compras</title>
+   <title>Produto X (Em construção)</title>
  </head>
 
  <body>
@@ -16,7 +16,7 @@
    <script src="js/bootstrap.min.js"></script>
 
    <!-- Barra de navegação-->
-  <div class="conteiner-fluid">
+  <div class="container-fluid">
     <nav class="navbar navbar-expand-md navbar-light mt-1">
       <div class="navbar-collapse collapse w-75 ms-4">
         <a class="navbar-brand mb-0" style="color: rgba(9, 43, 64, 1);" href="#">
@@ -94,7 +94,92 @@
       </div>
     </nav>
   </div>
+  
+  <div class="container" style="margin-top: 70px; margin-left: 100px; margin-right: 100px;">
+    <div class="row">
+        <div class="col">
+            <h2>Jaqueta Marrom</h2>
+            <p class="text-body">Roupa's Store</p>
+            <ul class="nav nav-tabs" style="margin-top: 30px;">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Descrição</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="pagina_produto_detalhes.html">Detalhes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="pagina_produto_review.html">Reviews</a>
+              </li>
+            </ul>
 
+            <p style="margin-top: 50px;">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ornare lacus posuere orci auctor, quis pretium sem mollis. Aliquam ex purus, rhoncus id lectus nec, feugiat vehicula velit.
+            </p>
+
+            <ul class="list-group list-group-flush" style="margin-top: 30px;">
+              <li class="list-group-item">
+                Tamanho:
+                <div class="form-check-inline" style="margin-left: 200px;">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    P
+                  </label>
+                </div>
+                <div class="form-check-inline">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    M
+                  </label>
+                </div>
+                <div class="form-check-inline">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" checked>
+                  <label class="form-check-label" for="flexRadioDefault3">
+                    G
+                  </label>
+                </div>
+                <div class="form-check-inline">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4" checked>
+                  <label class="form-check-label" for="flexRadioDefault4">
+                    GG
+                  </label>
+                </div>
+              </li>
+              <li class="list-group-item">
+                Cor:    
+                <div class="form-check-inline" style="margin-left: 280px;">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault21" checked>
+                  <label class="form-check-label" for="flexRadioDefault21">
+                    Mostarda
+                  </label>
+                </div>
+                <div class="form-check-inline">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault22" checked>
+                  <label class="form-check-label" for="flexRadioDefault22">
+                    Preta
+                  </label>
+                </div>
+              </li>
+            </ul>
+
+            <div class="row" style="margin-top: 50px;">
+              <div class="col">
+                <h2 style="margin-left: 20px;"><strong>R$ 58,00</strong></h2>
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-outline-secondary w-75" style="margin-left: 30px;">Comprar</button>
+              </div>
+            </div>
+            <a href="#" class="link-secondary" style="margin-left: 20px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" href="#" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+              </svg> Adicionar à lista de desejos
+            </a>
+        </div> 
+        <div class="col">
+          <img src="images/jaqueta.jpg" class="justify-content-center" style="margin-left: 40px;" height="400" width="380">
+        </div> 
+    </div>
+  </div>
    <!--Rodapé-->
    <hr class="featurette-divider mt-5">
    <footer class="container">
