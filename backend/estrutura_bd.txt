@@ -1,0 +1,164 @@
+-- Criando tabelas
+DROP DATABASE IF EXISTS loja;
+CREATE DATABASE loja;
+USE loja;
+CREATE TABLE IF NOT EXISTS `cliente` (
+`cpf` bigint(11) NOT NULL,
+`nome` varchar(40) NOT NULL,
+`endereco` varchar(30),
+`senha` varchar(10)  NOT NULL,
+`email` varchar(30)  NOT NULL,
+`telefone` int(9),
+PRIMARY KEY (`cpf`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `empresa` (
+`cnpj` bigint(15)  NOT NULL,
+`email` varchar(30)  NOT NULL,
+`fatura` float,
+`nome` varchar(30) ,
+`senha` varchar(10)  NOT NULL,
+`endereco` varchar(30),
+`telefone_contato` int(9),
+PRIMARY KEY (`cnpj`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `nota_fiscal` (
+`cod_nota_fiscal` bigint(30) auto_increment  NOT NULL,
+`data` date,
+PRIMARY KEY (`cod_nota_fiscal`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `categoria` (
+`cod_categoria` int(8) auto_increment NOT NULL,
+`nome_categoria` varchar(30)  NOT NULL,
+`descricao_categoria` varchar(300)  NOT NULL,
+PRIMARY KEY (`cod_categoria`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `produto` (
+`cod_produto` int(8) auto_increment NOT NULL,
+`nome_produto` varchar(30)  NOT NULL,
+`descricao_produto` varchar(300)  NOT NULL,
+`imagem` varchar(50) NOT NULL, 
+`preco_produto` float NOT NULL,
+`qnt_produto` int(5) NOT NULL,
+`tem_promocao`  boolean NOT NULL default 0,
+`porc_promocao` float,
+PRIMARY KEY (`cod_produto`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `compra` (
+`cod_compra` int(6) auto_increment NOT NULL,
+`fatura` float NOT NULL,
+`tipo_pag` varchar(30)  NOT NULL,
+`frete` float NOT NULL,
+PRIMARY KEY (`cod_compra`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `boleto` (
+`cod_pagBoleto` bigint(15)  auto_increment NOT NULL,
+`validade_compra` date,
+`boleto_status`  varchar(30) NOT NULL,
+PRIMARY KEY (`cod_pagBoleto`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `cartao` (
+`cod_pagCartao` bigint(15) auto_increment NOT NULL,
+`num_cartao` bigint(15)  NOT NULL,
+`validade_cartao` date,
+`tipo` varchar(20) NOT NULL,
+PRIMARY KEY (`cod_pagCartao`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `lista_favorito` (	
+`cpf_favCliente` bigint(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `lista_carrinho` (
+	`qnt_produtoCarrinho` int(5) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `lista_compra` (
+	`cod_rastreamento` int(5) NOT NULL,
+	`qnt_compraProduto` int(5) NOT NULL,
+PRIMARY KEY (`cod_rastreamento`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+-- FK
+-- PRODUTO
+ALTER TABLE produto ADD cnpj_empresa bigint NOT NULL;
+ALTER TABLE produto ADD CONSTRAINT FK_cnpj_empresa
+FOREIGN KEY(cnpj_empresa) REFERENCES empresa(cnpj);
+
+ALTER TABLE produto ADD cod_catProduto INT NOT NULL;
+ALTER TABLE produto ADD CONSTRAINT FK_cod_catProduto
+FOREIGN KEY(cod_catProduto) REFERENCES categoria(cod_categoria);
+
+-- COMPRA
+ALTER TABLE compra ADD cpf_compraCliente bigint NOT NULL;
+ALTER TABLE compra ADD CONSTRAINT FK_cpf_compraCliente
+FOREIGN KEY(cpf_compraCliente) REFERENCES cliente(cpf);
+
+-- PAGAMENTO
+ALTER TABLE boleto ADD cpf_clienteBoleto bigint NOT NULL;
+ALTER TABLE boleto ADD CONSTRAINT FK_cpf_clienteBoleto 
+FOREIGN KEY(cpf_clienteBoleto ) REFERENCES cliente(cpf);
+
+ALTER TABLE boleto ADD cod_compraBoleto INT NOT NULL;
+ALTER TABLE boleto ADD CONSTRAINT FK_cod_compraBoleto
+FOREIGN KEY(cod_compraBoleto) REFERENCES compra(cod_compra);
+
+ALTER TABLE cartao ADD cpf_clienteCartao bigint NOT NULL;
+ALTER TABLE cartao ADD CONSTRAINT FK_cpf_clienteCartao
+FOREIGN KEY(cpf_clienteCartao) REFERENCES cliente(cpf);
+
+ALTER TABLE cartao ADD cod_compraCartao INT NOT NULL;
+ALTER TABLE cartao ADD CONSTRAINT FK_cod_compraCartao
+FOREIGN KEY(cod_compraCartao) REFERENCES compra(cod_compra);
+
+-- NOTA FISCAL
+ALTER TABLE nota_fiscal ADD cpf_clienteNotaFiscal BIGINT NOT NULL;
+ALTER TABLE nota_fiscal ADD CONSTRAINT FK_cpf_clienteNotaFiscal
+FOREIGN KEY(cpf_clienteNotaFiscal) REFERENCES cliente(cpf);
+
+ALTER TABLE nota_fiscal ADD cod_compraNotaFiscal INT NOT NULL;
+ALTER TABLE nota_fiscal ADD CONSTRAINT FK_cod_compraNotaFiscal
+FOREIGN KEY(cod_compraNotaFiscal) REFERENCES compra(cod_compra);
+
+-- LISTAS
+ALTER TABLE lista_favorito ADD CONSTRAINT FK_cpf_favCliente
+FOREIGN KEY(cpf_favCliente) REFERENCES cliente(cpf);
+
+ALTER TABLE lista_favorito ADD cod_favProduto INT NOT NULL;
+ALTER TABLE lista_favorito ADD CONSTRAINT FK_cod_favProduto
+FOREIGN KEY(cod_favProduto) REFERENCES produto(cod_produto);
+
+ALTER TABLE lista_favorito ADD cnpj_favEmpresa bigint NOT NULL;
+ALTER TABLE lista_favorito ADD CONSTRAINT FK_cnpj_favEmpresa
+FOREIGN KEY(cnpj_favEmpresa) REFERENCES empresa(cnpj);
+
+
+
+-- LISTA DE CARRINHO
+ALTER TABLE lista_carrinho ADD cpf_listacliente BIGINT NOT NULL;
+ALTER TABLE lista_carrinho ADD CONSTRAINT FK_cpf_listacliente
+FOREIGN KEY(cpf_listacliente) REFERENCES cliente(cpf);
+
+ALTER TABLE lista_carrinho ADD cod_listaProduto INT NOT NULL;
+ALTER TABLE lista_carrinho ADD CONSTRAINT FK_cod_listaProduto
+FOREIGN KEY(cod_listaProduto) REFERENCES produto(cod_produto);
+
+-- LISTA DE COMPRA
+ALTER TABLE lista_compra ADD cpf_listaCompraCliente BIGINT NOT NULL;
+ALTER TABLE lista_compra ADD CONSTRAINT FK_cpf_listaCompraCliente
+FOREIGN KEY(cpf_listaCompraCliente ) REFERENCES cliente(cpf);
+
+ALTER TABLE lista_compra ADD cod_listaProdutoCompra INT NOT NULL;
+ALTER TABLE lista_compra ADD CONSTRAINT FK_cod_listaProdutoCompra
+FOREIGN KEY(cod_listaProdutoCompra) REFERENCES produto(cod_produto);
+
+ALTER TABLE lista_compra ADD cod_listaCompra INT NOT NULL;
+ALTER TABLE lista_compra ADD CONSTRAINT FK_cod_listaCompra
+FOREIGN KEY(cod_listaCompra) REFERENCES compra(cod_compra);
+

@@ -133,47 +133,32 @@
       </div>
 
       <!--Linha 3: Primeira linha de botões"-->
-      
-      <div class="row justify-content-center">
-        <div class="col">
-          <button type="button" class="btn btn-outline-secondary w-100" >Roupas</button>
-        </div>
-        <div class="col-md">
-          <button type="button" class="btn btn-outline-secondary w-100">Acessórios</button>
-        </div>
-        <div class="col-md">
-          <button type="button" class="btn btn-outline-secondary w-100">Móveis</button>
-        </div>
-        <div class="col-md">
-          <button type="button" class="btn btn-outline-secondary w-100">Eletrônicos</button>
-        </div>
-        <div class="col-md">
-          <button type="button" class="btn btn-outline-secondary w-100">Celular</button>
-        </div>
-        <div class="col-md">
-          <button type="button" class="btn btn-outline-secondary w-100">Beleza</button>
-        </div>
-      </div>
-
       <!--Linha 4: Segunda linha de botões"-->
-      <div class="row mt-2 justify-content-center">
-        <div class="col-md">
-          <button type="button" class="btn btn-outline-secondary w-100">Esportes</button>
-        </div>
-        <div class="col-md-3">
-          <button type="button" class="btn btn-outline-secondary w-100">Ferramentas</button>
-        </div>
-        <div class="col-md">
-          <button type="button" class="btn btn-outline-secondary  w-100">Livros</button>
-        </div>
-        <div class="col-md">
-          <button type="button" class="btn btn-outline-secondary w-100">Eletrodomésticos</button>
-        </div>
-        <div class="col-md">
-          <button type="button" class="btn btn-outline-secondary w-100">Cozinha</button>
-        </div>
-      </div>
-    </div>
+      <?php
+        $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+        if($conexao) {
+            echo mysqli_connect_error();
+        }
+        // Mostra todas as categorias
+        $query = "SELECT * FROM categoria";
+        $result = mysqli_query($conexao, $query) or die(mysql_error());
+        
+        // Cada linha
+        do{
+            echo '<div class="row mt-2 justify-content-center">';
+            $cont = 6;
+            while($row = mysqli_fetch_array($result)) {
+                echo '<div class="col">
+                  <button type="button" class="btn btn-outline-secondary w-100">'.$row['nome_categoria'].'</button>
+                </div>';
+                if(!--$cont) break;
+            }
+            echo '</div>';
+        } while($row);
+        
+        $conexao->close();
+      ?>
+
 
     <div class="container">
       <!--Linha 5: Texto "EMPRESAS MAIS BEM AVALIADAS"-->
