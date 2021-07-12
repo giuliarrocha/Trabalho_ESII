@@ -8,8 +8,8 @@
    <!-- Bootstrap CSS -->
    <link rel="stylesheet" href="css/bootstrap.min.css">
    <link rel="stylesheet" href="css/style.css" />
-   <link rel="stylesheet" href="css/carrinho.css" />
-   <title>Carrinho de Compras</title>
+   <link rel="stylesheet" href="css/informacoes.css" />
+   <title>Informações do Cliente</title>
  </head>
 
  <body>
@@ -96,55 +96,72 @@
     </nav>
   </div>
 
-  <!--Escrita do carrinho de compras-->
-  <div class="container" style="margin-top: 70px; margin-left: 100px; margin-right: 100px;">
+  <!--Mostrando info do cliente-->
+ <div class="container pt-5">
+
     <div class="row">
-      <div class="col">
-        <h2>Carrinho de Compras</h2>
-        <p>Verfique os produtos no seu carrinho</p>
-        <ul class="nav nav-tabs nav-fill" style="margin-top: 30px;">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Produtos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="">Detalhes</a>
-          </li>
-        </ul>
+        <div class="col-md-6"> <img src="images/exemplo_imagem.png" alt=""> </div>
+        <div class="col-md-6" style="margin-top: 60px;">  <h2>Informações da empresa</h2> </div>  
+    </div>
 
-        <div class="row border-top border-bottom">
-          <div class="row main align-items-center">
-              <div class="col-1" style="margin-top: 10px"><img class="img-fluid" src="images/jaqueta.jpg"></div>
-              <div class="col">
-                  <div class="row text-muted">Jaqueta de couro</div>
-              </div>
-
-              <div class="col">
-                 <a href="#"> - </a> 
-                 <a href="#" class="border" >1</a>
-                 <a href="#" class="border"> + </a> 
-              </div>
-              <div class="col">R&dollar; 44.00 <a href="#">&#10005;</a></div>
-          </div>
-
-          
+    <div class="row">
+        <div class="col-md-3">
+            <div class="container">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action"> Página Inicial </a>
+                    <a href="#" class="list-group-item list-group-item-action">Informações Gerais</a>
+                    <a href="#" class="list-group-item list-group-item-action">Estoque</a>
+                    <a href="#" class="list-group-item list-group-item-action">Vendas</a>
+                    <a href="#" class="list-group-item list-group-item-action"> Feedback</a>
+                </div>
+            </div>
         </div>
-
-      </div>
-
-      <div class="row" style="margin-top: 10px;">
         <div class="col">
-          <div class="d-flex justify-content-end">
-            <a class="btn btn-primary btn-lg" href="#">Continuar compra</a>
-          </div>
-          
+            <h2>Dados da empresa</h2>
+            <div class="form-group"> 
+                <label for="nomeEmpresa"> </label> <input type="text" name="username" placeholder="Nome da empresa" required class="form-control ">
+            </div>
+            <div class="form-group"> 
+                <label for="cnpj"> </label> <input type="text" name="username" placeholder="CNPJ" required class="form-control ">
+            </div>
+
+            <h2 style = "margin-top: 15px;">Endereço</h2>
+            <div class="form-group"> 
+                <div class="row">
+                    <div class="col-md-8"> 
+                        <label for="ruaNome"> </label> <input type="text" name="username" placeholder="Rua" required class="form-control "> 
+                    </div>
+                    <div class="col-md-4"> 
+                        <label for="ruaNum"> </label> <input type="text" name="username" placeholder="numero" required class="form-control "> 
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8"> 
+                        <label for="bairroNome"> </label> <input type="text" name="username" placeholder="Nome do Bairro" required class="form-control "> 
+                    </div>
+                    <div class="col-md-4"> 
+                        <label for="cep"> </label> <input type="text" name="username" placeholder="CEP" required class="form-control "> 
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="complemento"> </label> <input type="text" name="username" placeholder="Complemento" required class="form-control "> 
+                    </div>
+                    <div class="col-md-4">
+                        <label for="cidade"> </label> <input type="text" name="username" placeholder="Cidade" required class="form-control "> 
+                    </div>
+                    <div class="col-md-4">
+                        <label for="estado"> </label> <input type="text" name="username" placeholder="Estado" required class="form-control "> 
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
 
     </div>
 
-    
-    
-  </div>
+ </div>
 
 
 
