@@ -187,13 +187,10 @@
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
 
-              <!-- Setinha esquerda -->
-              <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
                 
-                <?php
+            <?php
+                    
+                
                     $query = "SELECT COUNT(*) AS qt_produto FROM produto";
                     $result = mysqli_query($conexao, $query) or die(mysql_error());
                     if($row = mysqli_fetch_array($result)) {
@@ -203,25 +200,62 @@
                         $qt_bloco = floor($qt_produto/16);
                         if($qt_produto%16)$qt_bloco++;
 
+                        // Imprimir setinha esquerda
+                        $qt_blocoTemp = $qt_bloco;
                         $cont = 1;
-                        
+                        $href = '';
+                        $habilitado = '';
+                        if($offset == 0){
+                            $verdadeiro = "false";
+                            $habilitado = " disabled";
+                        }
+                        else {
+                            $verdadeiro = "true";
+                            $href = "pagina_listagem_produtos.php?offset=".$offset-16;
+                            $habilitado = "";
+                        }
+                        echo '
+                            <!-- Setinha esquerda -->
+                            <li class="page-item'.$habilitado.'">
+                            <a class="page-link" href="'.$href.'" aria-disabled="'.$verdadeiro.'" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                            </li>';
+
                         // Imprimir Pages
-                        while($qt_bloco--) {
+                        $qt_blocoTemp = $qt_bloco;
+                        $cont = 1;
+                        while($qt_blocoTemp--) {
                             $ativo = "";
                             if($offset == ($cont-1)*16) $ativo = " active";
                             echo '<li class="page-item'.$ativo.'"><a class="page-link" href="pagina_listagem_produtos.php?offset='.(($cont-1)*16).'">'.$cont.'</a></li>';
                             $cont++;
                         }
+                        
+                        
+                        // Imprimir setinha direita
+                        $qt_blocoTemp = $qt_bloco;
+                        $cont = 1;
+                        $href = '';
+                        $habilitado = '';
+                        if($offset+16 < $qt_produto) {
+                            $verdadeiro = "true";
+                            $href = "pagina_listagem_produtos.php?offset=".($offset + 16);
+                        }
+                        else {
+                            $verdadeiro = "falso";
+                            $habilitado = " disabled";
+                        }
+                        echo '
+                            <!-- Setinha esquerda -->
+                            <li class="page-item'.$habilitado.'">
+                            <a class="page-link" href="'.$href.'" aria-disabled="'.$verdadeiro.'" aria-label="Previous">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                            </li>';
                     }
                   ?>
-              </li>
 
-              <!-- Setinha direita -->
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
             </ul>
           </nav>
     </div>
