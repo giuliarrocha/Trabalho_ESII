@@ -11,30 +11,24 @@
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Text&display=swap" rel="stylesheet">
-   <title>Site</title>
+   <title>Pesquisa</title>
  </head>
 
  <body>
-  <script src="js/bootstrap.min.js"></script>
+   <!-- Bootstrap JavaScript -->
+   <script src="js/bootstrap.min.js"></script>
 
-  <!-- Barra de navegação-->
+   <!-- Barra de navegação-->
   <div class="conteiner">
     <nav class="navbar navbar-expand-md navbar-light mt-1">
       <div class="navbar-collapse collapse w-75 ms-4">
-        <a class="navbar-brand mb-0" style="color: rgba(9, 43, 64, 1);" href="#">
+        <a class="navbar-brand mb-0" style="color: rgba(9, 43, 64, 1);" href="pagina_inicial.html">
           <img src="images/Design.png" alt="" width="30" height="32" class="d-inline-block align-text-bottom">
           Home
         </a>
           <ul class="navbar-nav me-auto mt-2">
             <li class="nav-item">
-              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">
-              <?php   
-                // Checa sessão
-                session_start();
-                if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") echo 'Para empresas';
-                else echo 'Para clientes';
-              ?>
-              </a>
+              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">Para empresas</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">Ofertas</a>
@@ -93,7 +87,7 @@
                 }
               ?>
             </li>
-            <!--Botao Carrinho de compras, somente para cliente ou quando ninguém logado -->
+            <!--Botao Carrinho de compras-->
             <?php
                 if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
                     echo '<a href="carrinho_compras.php">
@@ -140,138 +134,103 @@
       </div>
     </nav>
   </div>
-    
 
-    <!--Grid para foto, categorias e empresas mais bem avaliadas-->
-    <div class="container-fluid">
+  <!--Grid dos produtos-->
+    <div class="container" style="margin-top: 40px; margin-left: 150px; margin-right: 150px;">
+    <?php
+        // Pega número inicial de produtos
+        $offset = isset($_GET['offset'])?$_GET['offset']:0;
 
-      <!--Linha1: Carousel das imagens-->
-      <div class="row mt-3">
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="images/buynow.jpg"alt="" width="" height="300" class="d-block w-100">
-            </div>
-            <div class="carousel-item">
-              <img src="images/img_roupas.jpg"alt="" width="" height="300" class="d-block w-100">
-            </div>
-            <div class="carousel-item">
-              <img src="images/bookshelf.jpg"alt="" width="" height="300" class="d-block w-100">
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
-      
-    <div class="container">
-      <!--Linha 2: Texto "Categorias"-->
-      <div class="row mt-5">
-        <h4>CATEGORIAS</h4>
-      </div>
-
-      <!--Linha 3: Primeira linha de botões"-->
-      <!--Linha 4: Segunda linha de botões"-->
-      <?php
+        // Mostra todos os produtos
         $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
         if($conexao) {
             echo mysqli_connect_error();
         }
-        // Mostra todas as categorias
-        $query = "SELECT * FROM categoria";
-        $result = mysqli_query($conexao, $query) or die(mysql_error());
         
-        // Cada linha
+        $query = "SELECT * FROM produto LIMIT $offset,16;";
+        $result = mysqli_query($conexao, $query) or die(mysql_error());
+
+        // Grupos de 4 por linha
+        $inicio = 1;
         do{
-            // Checa se há um item antes de criar um novo carrossel
+            // Checa se há um item antes de criar linha
             if($row = mysqli_fetch_array($result)) {
-                echo '<div class="row mt-2 justify-content-center">';
-                $cont = 6;
+                echo '<div class="row"';
+                if($inicio){ echo '>'; $inicio = 0; }
+                else echo ' style="margin-top: 50px;">';
+
+                $cont = 4;
                 do {
                     echo '<div class="col">
-                    <button type="button" class="btn btn-outline-secondary w-100">'.$row['nome_categoria'].'</button>
-                    </div>';
+                    <div class="card w-75" style="width: 9rem;">
+                        <img src="'.$row['imagem'].'" width="150" height="180" class="card-img-top" alt="...">
+                        <ul class="list-group list-group-flush text-center">
+                            <li class="list-group-item" style="height: 33px;">
+                                <h6 class="card-title"><strong>'.$row['nome_produto'].'</strong></h6>
+                            </li>
+                            <li class="list-group-item" style="height: 33px;">
+                                <p>R$ '.$row['preco_produto'].'</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>';
                     if(!--$cont) break;
                 } while($row = mysqli_fetch_array($result));
                 echo '</div>';
             }
         } while($row);
+    ?>
         
-        $conexao->close();
-      ?>
+  </div>
 
+    <div class="container" style="margin-top: 60px;">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
 
-    <div class="container">
-      <!--Linha 5: Texto "EMPRESAS MAIS BEM AVALIADAS"-->
-      <div class="row mt-5" style="margin-bottom: 15px">
-        <h4>EMPRESAS MAIS BEM AVALIADAS</h4>
-      </div>
-
-      <!--Linha 6: Fileira com empresas"-->
-
-      <div class="row justify-content-center">
-        <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false" data-bs-interval="false">
-          <div class="carousel-inner">
+              <!-- Setinha esquerda -->
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                
                 <?php
-                    $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
-                    if($conexao) {
-                        echo mysqli_connect_error();
-                    }
-                    // Mostra todas as empresas bem-avaliadas
-                    $query = "SELECT * FROM empresa WHERE avaliacao >= 4.5 ORDER BY avaliacao";
+                    $query = "SELECT COUNT(*) AS qt_produto FROM produto";
                     $result = mysqli_query($conexao, $query) or die(mysql_error());
-                    
-                    // Grupos de 6 por slide
-                    $inicio = 1;
-                    do{
-                        // Checa se há um item antes de criar um novo carrossel
-                        if($row = mysqli_fetch_array($result)) {
-                            echo '<div class="carousel-item';
-                            if($inicio){ echo ' active"><div class="row">'; $inicio = 0; }
-                            else echo '"><div class="row justify-content-start">';
+                    if($row = mysqli_fetch_array($result)) {
+                        $qt_produto = $row['qt_produto'];
+                        
+                        // Cada página com 16 produtos equivale a um bloco Page
+                        $qt_bloco = floor($qt_produto/16);
+                        if($qt_produto%16)$qt_bloco++;
 
-                            $cont = 6;
-                            do {
-                                echo '<div class="col">
-                                <div class="card" style="width: 8rem;">
-                                    <img src="'.$row['imagem_logo'].'" width="120" height="120" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                    <h6>'.$row['nome'].'</h6>
-                                    </div>
-                                </div>
-                                </div>';
-                                if(!--$cont) break;
-                            } while($row = mysqli_fetch_array($result));
-                            echo '</div></div>';
+                        $cont = 1;
+                        
+                        // Imprimir Pages
+                        while($qt_bloco--) {
+                            $ativo = "";
+                            if($offset == ($cont-1)*16) $ativo = " active";
+                            echo '<li class="page-item'.$ativo.'"><a class="page-link" href="pagina_listagem_produtos.php?offset='.(($cont-1)*16).'">'.$cont.'</a></li>';
+                            $cont++;
                         }
-                    } while($row);
+                    }
+                  ?>
+              </li>
 
-                    $conexao->close();
-                ?>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
-
+              <!-- Setinha direita -->
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
     </div>
-    <!--Rodapé-->
+
     <hr class="featurette-divider mt-5">
     <footer class="container">
       <p class="float-end"><a href="#">Back to top</a></p>
       <p>© 2017–2021 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
     </footer>
-  </body>
+ </body>
+ 
 </html>

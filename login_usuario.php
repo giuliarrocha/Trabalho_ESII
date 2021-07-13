@@ -49,26 +49,41 @@
               </ul>
               <?php
                 // Checa sessão
-                if (isset($_SESSION['tipo'])) {}
-              ?>  
-              <!--Se for área da empresa e estiver logado:
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
-                <li><a class="dropdown-item" href="#">Estoque</a></li>
-                <li><a class="dropdown-item" href="#">Vendas</a></li>
-                <li><a class="dropdown-item" href="#">Carteira</a></li>
-                <li><a class="dropdown-item" href="#">Segurança</a></li>
-                <li><a class="dropdown-item" href="#">Feedbacks</a></li>
-              </ul>
-              -->
-              <!--Se o usuário estiver logado:
-              <ul class="dropdown-menu dropdown-menu-sm-start" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Informações Pessoais</a></li>
-                <li><a class="dropdown-item" href="#">Meus pedidos</a></li>
-                <li><a class="dropdown-item" href="#">Segurança</a></li>
-                <li><a class="dropdown-item" href="#">Pagamento</a></li>
-              </ul>
-              -->
+                session_start();
+                if (!isset($_SESSION['tipo'])) {
+                    // Se não estiver logado:
+                    echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="login_usuario.php">Entrar</a></li>
+                    <li><a class="dropdown-item" href="login_usuario.php">Cadastrar-se</a></li>
+                  </ul>';
+                } else if($_SESSION['tipo'] == "empresa") {
+                    // Se for área da empresa:
+                    /*echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
+                    <li><a class="dropdown-item" href="#">Estoque</a></li>
+                    <li><a class="dropdown-item" href="#">Vendas</a></li>
+                    <li><a class="dropdown-item" href="#">Carteira</a></li>
+                    <li><a class="dropdown-item" href="#">Segurança</a></li>
+                    <li><a class="dropdown-item" href="#">Feedbacks</a></li>
+                    <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
+                  </ul>';*/
+                  header('Location: pagina_inicial.php');
+                  exit;
+                  return;
+                } else {
+                    // Se estiver logado
+                    /*echo '<ul class="dropdown-menu dropdown-menu-sm-start" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="#">Informações Pessoais</a></li>
+                      <li><a class="dropdown-item" href="#">Meus pedidos</a></li>
+                      <li><a class="dropdown-item" href="#">Segurança</a></li>
+                      <li><a class="dropdown-item" href="#">Pagamento</a></li>
+                    <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
+                  </ul>';*/
+                  header('Location: pagina_inicial.php');
+                  exit;
+                  return;
+                }
+              ?>
             </li>
           </ul>
       </div>
