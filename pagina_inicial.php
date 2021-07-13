@@ -67,8 +67,8 @@
                 if (!isset($_SESSION['tipo'])) {
                     // Se não estiver logado:
                     echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="login_usuario.html">Entrar</a></li>
-                    <li><a class="dropdown-item" href="login_usuario.html">Cadastrar-se</a></li>
+                    <li><a class="dropdown-item" href="login_usuario.php">Entrar</a></li>
+                    <li><a class="dropdown-item" href="login_usuario.php">Cadastrar-se</a></li>
                   </ul>';
                 } else if($_SESSION['tipo'] == "empresa") {
                     // Se for área da empresa:

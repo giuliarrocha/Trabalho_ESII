@@ -47,6 +47,10 @@
                 <li><a class="dropdown-item" href="#">Entrar</a></li>
                 <li><a class="dropdown-item" href="#">Cadastrar-se</a></li>
               </ul>
+              <?php
+                // Checa sessão
+                if (isset($_SESSION['tipo'])) {}
+              ?>  
               <!--Se for área da empresa e estiver logado:
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="#">Informações Gerais</a></li>

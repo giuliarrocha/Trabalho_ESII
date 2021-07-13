@@ -19,7 +19,7 @@
 
     if($row = mysqli_fetch_array($result)){
         $conexao->close();
-        header('Location: ../login_empresa.html');
+        header('Location: ../login_empresa.php');
         exit;
         return;
     }
