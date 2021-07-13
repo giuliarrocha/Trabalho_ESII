@@ -21,13 +21,13 @@
   <div class="conteiner">
     <nav class="navbar navbar-expand-md navbar-light mt-1">
       <div class="navbar-collapse collapse w-75 ms-4">
-        <a class="navbar-brand mb-0" style="color: rgba(9, 43, 64, 1);" href="#">
+        <a class="navbar-brand mb-0" style="color: rgba(9, 43, 64, 1);" href="pagina_inicial.php">
           <img src="images/Design.png" alt="" width="30" height="32" class="d-inline-block align-text-bottom">
           Home
         </a>
           <ul class="navbar-nav me-auto mt-2">
             <li class="nav-item">
-              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">
+              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="backend/sair.php?sairUser=1">
               <?php   
                 // Checa sessão
                 session_start();
@@ -44,7 +44,7 @@
 
       <div class="mx-auto" style="width: 1000px;">
         <form class="d-flex mt-2">
-          <input class="form-control form-control-sm me-0" type="search" placeholder="Search" aria-label="Search">
+          <input class="form-control form-control-sm me-0" type="search" placeholder="Pesquisar produtos" aria-label="Search">
           <button class="btn btn-outline btn-sm" type="submit">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -56,7 +56,9 @@
       <div class="navbar-collapse collapse w-100">
           <!--Botao Conta-->
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item dropdown me-md-3">
+            <?php if(isset($_SESSION['tipo']) && $_SESSION['tipo'] == "empresa")echo '<li class="nav-item dropstart me-md-3">';
+            else echo '<li class="nav-item dropdown me-md-3">';
+            ?>
               <a class="nav-link dropdown-toggle justify-content-start" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="black" class="bi bi-person-fill " viewBox="0 0 16 16">
                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -73,13 +75,13 @@
                 } else if($_SESSION['tipo'] == "empresa") {
                     // Se for área da empresa:
                     echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
-                    <li><a class="dropdown-item" href="#">Estoque</a></li>
-                    <li><a class="dropdown-item" href="#">Vendas</a></li>
-                    <li><a class="dropdown-item" href="#">Carteira</a></li>
-                    <li><a class="dropdown-item" href="#">Segurança</a></li>
-                    <li><a class="dropdown-item" href="#">Feedbacks</a></li>
-                    <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
+                        <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
+                        <li><a class="dropdown-item" href="#">Estoque</a></li>
+                        <li><a class="dropdown-item" href="#">Vendas</a></li>
+                        <li><a class="dropdown-item" href="#">Carteira</a></li>
+                        <li><a class="dropdown-item" href="#">Segurança</a></li>
+                        <li><a class="dropdown-item" href="#">Feedbacks</a></li>
+                        <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 } else {
                     // Se estiver logado

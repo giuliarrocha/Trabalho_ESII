@@ -1,7 +1,7 @@
 <?php
     // pega dados
     if(isset($_REQUEST['submit'])){
-        $cpf = isset($_REQUEST['cnpj'])?$_REQUEST['cnpj']:0;
+        $cnpj = isset($_REQUEST['cnpj'])?$_REQUEST['cnpj']:0;
         $email = isset($_REQUEST['email'])?$_REQUEST['email']:"";
         $senha = isset($_REQUEST['senha'])?$_REQUEST['senha']:"";
     }

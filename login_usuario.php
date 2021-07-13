@@ -28,7 +28,7 @@
         </a>
           <ul class="navbar-nav me-auto mt-2">
             <li class="nav-item">
-              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">Para empresas</a>
+              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="login_empresa.php">Para empresas</a>
             </li>
           </ul>
       </div>
@@ -113,7 +113,7 @@
                           </div>
                         </div>
                         <div class="d-flex justify-content-center">
-                            <button type="submit" name="submit" class="espaco30 w-100 btn btn-primary ">Entrar</button>
+                        <button type="submit" name="submit" class="btn btn-outline-secondary espaco30 w-100" style="margin-left: 30px;">Entrar</button>
                         </div>
                     </form>
                 </div>
@@ -121,7 +121,7 @@
 
             
             <div class="p-1 w-5 bordaDireita"></div>
-            <div class="p-5 w-100"><div class="container letraTitulo">Criar conta</div>
+            <div class="p-5 w-100"><div class="container letraTitulo">Criar uma conta</div>
                 <p style="margin-top: 15px; padding-bottom: 40px;" class="cinza centro">Ainda não é cadastrado? Crie uma conta!</p>
 
                 <form action="backend/cadastrar_cliente.php" method="post">
@@ -150,7 +150,7 @@
                       </div>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" name="submit" class="espaco30 w-100 btn btn-primary ">Cadastrar</button>
+                        <button type="submit" name="submit" class="espaco30 w-100 btn btn-outline-secondary ">Cadastrar</button>
                     </div>
                 </form>
             </div>
