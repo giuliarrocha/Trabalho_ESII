@@ -27,7 +27,14 @@
         </a>
           <ul class="navbar-nav me-auto mt-2">
             <li class="nav-item">
-              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">Para empresas</a>
+              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">
+              <?php   
+                // Checa sessão
+                session_start();
+                if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") echo 'Para empresas';
+                else echo 'Para clientes';
+              ?>
+              </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">Ofertas</a>
@@ -55,43 +62,78 @@
                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                 </svg>
               </a>
-              <!--Se não estiver logado:-->
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="login_usuario.html">Entrar</a></li>
-                <li><a class="dropdown-item" href="login_usuario.html">Cadastrar-se</a></li>
-              </ul>
-              
-              <!--Se for área da empresa:
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
-                <li><a class="dropdown-item" href="#">Estoque</a></li>
-                <li><a class="dropdown-item" href="#">Vendas</a></li>
-                <li><a class="dropdown-item" href="#">Carteira</a></li>
-                <li><a class="dropdown-item" href="#">Segurança</a></li>
-                <li><a class="dropdown-item" href="#">Feedbacks</a></li>
-              </ul>
-              -->
-              <!--Se estiver logado
-              <ul class="dropdown-menu dropdown-menu-sm-start" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Informações Pessoais</a></li>
-                <li><a class="dropdown-item" href="#">Meus pedidos</a></li>
-                <li><a class="dropdown-item" href="#">Segurança</a></li>
-                <li><a class="dropdown-item" href="#">Pagamento</a></li>
-              </ul>
-              -->
+              <?php
+                // Checa sessão
+                if (!isset($_SESSION['tipo'])) {
+                    // Se não estiver logado:
+                    echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="login_usuario.html">Entrar</a></li>
+                    <li><a class="dropdown-item" href="login_usuario.html">Cadastrar-se</a></li>
+                  </ul>';
+                } else if($_SESSION['tipo'] == "empresa") {
+                    // Se for área da empresa:
+                    echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
+                    <li><a class="dropdown-item" href="#">Estoque</a></li>
+                    <li><a class="dropdown-item" href="#">Vendas</a></li>
+                    <li><a class="dropdown-item" href="#">Carteira</a></li>
+                    <li><a class="dropdown-item" href="#">Segurança</a></li>
+                    <li><a class="dropdown-item" href="#">Feedbacks</a></li>
+                  </ul>';
+                } else {
+                    // Se estiver logado
+                    echo '<ul class="dropdown-menu dropdown-menu-sm-start" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#">Informações Pessoais</a></li>
+                    <li><a class="dropdown-item" href="#">Meus pedidos</a></li>
+                    <li><a class="dropdown-item" href="#">Segurança</a></li>
+                    <li><a class="dropdown-item" href="#">Pagamento</a></li>
+                  </ul>';
+                }
+              ?>
             </li>
-            <!--Botao Carrinho de compras-->
-            <a href="carrinho_compras.html">
-              <button type="button" class="btn btn-outline-secondary position-relative rounded-circle mx-4 me-md-5" style="background-color: rgba(242, 193, 174, 1);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-cart" viewBox="0 0 16 16">
-                  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                </svg>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  2
-                  <span class="visually-hidden">unread messages</span>
-                </span>
-              </button>
-            </a>
+            <!--Botao Carrinho de compras, somente para cliente ou quando ninguém logado -->
+            <?php
+                if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
+                    echo '<a href="carrinho_compras.php">
+                    <button type="button" class="btn btn-outline-secondary position-relative rounded-circle mx-4 me-md-5" style="background-color:';
+                    
+                    $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+                    if($conexao) {
+                        echo mysqli_connect_error();
+                    }
+                    // Mostra todas as categorias
+                    $cpf = isset($_SESSION['cpf'])?$_SESSION['cpf']:"";
+                    $query = "SELECT COUNT(*) AS soma FROM lista_carrinho, cliente WHERE cpf_listacliente = cpf AND cpf = '$cpf' GROUP BY cpf";
+                    $result = mysqli_query($conexao, $query) or die(mysql_error());
+                    
+                    if($row = mysqli_fetch_array($result)) {
+                        echo '
+                    rgba(242, 193, 174, 1);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-cart" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        '.$row['soma'].'
+                        <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </button>
+                    </a>';
+                    } else {
+                        echo '
+                    rgba(300, 300, 300, 300);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-cart" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        0
+                        <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </button>
+                    </a>';
+                    }
+                    
+                }
+            ?>
           </ul>
       </div>
     </nav>
@@ -230,5 +272,4 @@
       <p>© 2017–2021 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
     </footer>
   </body>
- 
 </html>
