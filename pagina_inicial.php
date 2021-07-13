@@ -79,6 +79,7 @@
                     <li><a class="dropdown-item" href="#">Carteira</a></li>
                     <li><a class="dropdown-item" href="#">Segurança</a></li>
                     <li><a class="dropdown-item" href="#">Feedbacks</a></li>
+                    <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 } else {
                     // Se estiver logado
@@ -87,6 +88,7 @@
                     <li><a class="dropdown-item" href="#">Meus pedidos</a></li>
                     <li><a class="dropdown-item" href="#">Segurança</a></li>
                     <li><a class="dropdown-item" href="#">Pagamento</a></li>
+                    <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 }
               ?>
