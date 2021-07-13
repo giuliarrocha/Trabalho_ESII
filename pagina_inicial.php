@@ -145,15 +145,18 @@
         
         // Cada linha
         do{
-            echo '<div class="row mt-2 justify-content-center">';
-            $cont = 6;
-            while($row = mysqli_fetch_array($result)) {
-                echo '<div class="col">
-                  <button type="button" class="btn btn-outline-secondary w-100">'.$row['nome_categoria'].'</button>
-                </div>';
-                if(!--$cont) break;
+            // Checa se há um item antes de criar um novo carrossel
+            if($row = mysqli_fetch_array($result)) {
+                echo '<div class="row mt-2 justify-content-center">';
+                $cont = 6;
+                do {
+                    echo '<div class="col">
+                    <button type="button" class="btn btn-outline-secondary w-100">'.$row['nome_categoria'].'</button>
+                    </div>';
+                    if(!--$cont) break;
+                } while($row = mysqli_fetch_array($result));
+                echo '</div>';
             }
-            echo '</div>';
         } while($row);
         
         $conexao->close();
@@ -162,123 +165,51 @@
 
     <div class="container">
       <!--Linha 5: Texto "EMPRESAS MAIS BEM AVALIADAS"-->
-      <div class="row mt-5">
+      <div class="row mt-5" style="margin-bottom: 15px">
         <h4>EMPRESAS MAIS BEM AVALIADAS</h4>
       </div>
 
       <!--Linha 6: Fileira com empresas"-->
-      
+
       <div class="row justify-content-center">
         <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false" data-bs-interval="false">
           <div class="carousel-inner">
-            <div class="carousel-item active">
+                <?php
+                    $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+                    if($conexao) {
+                        echo mysqli_connect_error();
+                    }
+                    // Mostra todas as empresas bem-avaliadas
+                    $query = "SELECT * FROM empresa WHERE avaliacao >= 4.5 ORDER BY avaliacao";
+                    $result = mysqli_query($conexao, $query) or die(mysql_error());
+                    
+                    // Grupos de 6 por slide
+                    $inicio = 1;
+                    do{
+                        // Checa se há um item antes de criar um novo carrossel
+                        if($row = mysqli_fetch_array($result)) {
+                            echo '<div class="carousel-item';
+                            if($inicio){ echo ' active"><div class="row">'; $inicio = 0; }
+                            else echo '"><div class="row justify-content-start">';
 
-              <div class="row">
+                            $cont = 6;
+                            do {
+                                echo '<div class="col">
+                                <div class="card" style="width: 8rem;">
+                                    <img src="'.$row['imagem_logo'].'" width="120" height="120" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                    <h6>'.$row['nome'].'</h6>
+                                    </div>
+                                </div>
+                                </div>';
+                                if(!--$cont) break;
+                            } while($row = mysqli_fetch_array($result));
+                            echo '</div></div>';
+                        }
+                    } while($row);
 
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-bocarosa.png" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Boca Rosa Beauty</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-motorola.jpg" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Motorola</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-casasbahia.jpg" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Casas Bahia</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-saraiva.jpg" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Saraiva</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-zara.jpg" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Zara</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-shein.png" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Shein</h6>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="carousel-item">
-              <div class="row justify-content-start">
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-vivara.jpg" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Vivara</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-channel.png" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Channel</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/mcdonalds-logo.png" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Mc Donalds</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-adidas.jpg" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Adidas</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-xiomi.jpg" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Xiaomi</h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card" style="width: 8rem;">
-                    <img src="images/logo-under.jpg" width="120" height="120" class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h6>Under Armour</h6>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            </div>
-
+                    $conexao->close();
+                ?>
           </div>
           <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
