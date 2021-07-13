@@ -146,8 +146,23 @@
         if($conexao) {
             echo mysqli_connect_error();
         }
-        
-        $query = "SELECT * FROM produto LIMIT $offset,16;";
+
+        // Seleciona tipo de consulta
+        if(isset($_GET['oferta'])) {
+            $query = "SELECT * FROM produto WHERE tem_promocao = 1 LIMIT $offset,16;";
+        } else if(isset($_GET['cod_categoria']) && $_GET['cod_categoria'] != '') {
+            $cod_categoria = $_GET['cod_categoria'];
+            $query = "SELECT * FROM produto, categoria WHERE cod_catProduto = cod_categoria AND cod_catProduto = '$cod_categoria' LIMIT $offset,16;";
+        } else if(isset($_GET['cnpj']) && $_GET['cnpj'] != '') {
+            $cnpj = $_GET['cnpj'];
+            $query = "SELECT * FROM produto, empresa WHERE cnpj = cnpj_empresa AND cnpj = '$cnpj' LIMIT $offset,16;";
+        } else if(isset($_GET['pesquisar']) && $_GET['pesquisar'] != '') {
+            $pesquisar = $_GET['pesquisar'];
+            $query = "SELECT * FROM produto WHERE nome_produto LIKE '%$pesquisar%' LIMIT $offset,16;";
+        } else {
+            $query = "SELECT * FROM produto LIMIT $offset,16;";
+        }
+
         $result = mysqli_query($conexao, $query) or die(mysql_error());
 
         // Grupos de 4 por linha
@@ -188,24 +203,37 @@
             <ul class="pagination justify-content-center">
 
                 
-            <?php
-                    
-                
+            <?php    
+                // Seleciona tipo de consulta
+                if(isset($_GET['oferta'])) {
+                    $query = "SELECT COUNT(*) AS qt_produto FROM produto WHERE tem_promocao = 1";
+                } else if(isset($_GET['cod_categoria']) && $_GET['cod_categoria'] != '') {
+                    $cod_categoria = $_GET['cod_categoria'];
+                    $query = "SELECT COUNT(*) AS qt_produto FROM produto, categoria WHERE cod_catProduto = cod_categoria AND cod_catProduto = '$cod_categoria';";
+                } else if(isset($_GET['cnpj']) && $_GET['cnpj'] != '') {
+                    $cnpj = $_GET['cnpj'];
+                    $query = "SELECT COUNT(*) AS qt_produto FROM produto, empresa WHERE cnpj = cnpj_empresa AND cnpj = '$cnpj';";
+                } else if(isset($_GET['pesquisar']) && $_GET['pesquisar'] != '') {
+                    $pesquisar = $_GET['pesquisar'];
+                    $query = "SELECT COUNT(*) AS qt_produto FROM produto WHERE nome_produto LIKE '%$pesquisar%'";
+                } else {
                     $query = "SELECT COUNT(*) AS qt_produto FROM produto";
-                    $result = mysqli_query($conexao, $query) or die(mysql_error());
-                    if($row = mysqli_fetch_array($result)) {
-                        $qt_produto = $row['qt_produto'];
-                        
-                        // Cada página com 16 produtos equivale a um bloco Page
-                        $qt_bloco = floor($qt_produto/16);
-                        if($qt_produto%16)$qt_bloco++;
+                }
+            
+                $result = mysqli_query($conexao, $query) or die(mysql_error());
+                if($row = mysqli_fetch_array($result)) {
+                    $qt_produto = $row['qt_produto'];
+                    
+                    // Cada página com 16 produtos equivale a um bloco Page
+                    $qt_bloco = floor($qt_produto/16);
+                    if($qt_produto%16)$qt_bloco++;
 
-                        // Imprimir setinha esquerda
-                        $qt_blocoTemp = $qt_bloco;
-                        $cont = 1;
-                        $href = '';
-                        $habilitado = '';
-                        if($offset == 0){
+                    // Imprimir setinha esquerda
+                    $qt_blocoTemp = $qt_bloco;
+                    $cont = 1;
+                    $href = '';
+                    $habilitado = '';
+                    if($offset == 0){
                             $verdadeiro = "false";
                             $habilitado = " disabled";
                         }
