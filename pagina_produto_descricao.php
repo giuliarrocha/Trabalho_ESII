@@ -97,87 +97,59 @@
   
   <div class="container" style="margin-top: 70px; margin-left: 100px; margin-right: 100px;">
     <div class="row">
-        <div class="col">
-            <h2>Jaqueta Marrom</h2>
-            <p class="text-body">Roupa's Store</p>
-            <ul class="nav nav-tabs" style="margin-top: 30px;">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Descrição</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="pagina_produto_detalhes.html">Detalhes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="pagina_produto_review.html">Reviews</a>
-              </li>
-            </ul>
+        <?php
+            $cod_produto = 1;//$_GET['codProduto'];
 
-            <p style="margin-top: 50px;">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ornare lacus posuere orci auctor, quis pretium sem mollis. Aliquam ex purus, rhoncus id lectus nec, feugiat vehicula velit.
-            </p>
+            $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+            if($conexao) {
+                echo mysqli_connect_error();
+            }
+            // Mostra dados do produto selecionado
+            $query = "SELECT * FROM produto, empresa WHERE empresa.cnpj = produto.cnpj_empresa AND cod_produto = '$cod_produto'";
+            $result = mysqli_query($conexao, $query) or die(mysql_error());
+            
+            if($row = mysqli_fetch_array($result)) {
+                echo '<div class="col">
+                <h2>'.$row['nome_produto'].'</h2>
+                <p class="text-body">'.$row['nome'].'</p>
+                <ul class="nav nav-tabs" style="margin-top: 30px;">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Descrição</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="pagina_produto_detalhes.html">Detalhes</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="pagina_produto_review.html">Reviews</a>
+                  </li>
+                </ul>
+                <p style="margin-top: 50px;">
+                  '.$row['descricao_produto'].'
+                </p>
+                <div class="row" style="margin-top: 50px;">
+                  <div class="col">
+                    <h2 style="margin-left: 20px;"><strong>R$ '.$row['preco_produto'].'</strong></h2>
+                  </div>
+                  <div class="col">
+                    <button type="button" class="btn btn-outline-secondary w-75" style="margin-left: 30px;">Comprar</button>
+                  </div>
+                </div>
+                <a href="#" class="link-secondary" style="margin-left: 20px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" href="#" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                  </svg> Adicionar à lista de desejos
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                    </svg>
+                </a>
+            </div> ';
+            // verificar se já está na lista de favoritos
+            echo '<div class="col">
+              <img src="'.$row['imagem'].'" class="justify-content-center" style="margin-left: 40px;" height="400" width="380">
+            </div>';
+            }
 
-            <ul class="list-group list-group-flush" style="margin-top: 30px;">
-              <li class="list-group-item">
-                Tamanho:
-                <div class="form-check-inline" style="margin-left: 200px;">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                  <label class="form-check-label" for="flexRadioDefault1">
-                    P
-                  </label>
-                </div>
-                <div class="form-check-inline">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    M
-                  </label>
-                </div>
-                <div class="form-check-inline">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" checked>
-                  <label class="form-check-label" for="flexRadioDefault3">
-                    G
-                  </label>
-                </div>
-                <div class="form-check-inline">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4" checked>
-                  <label class="form-check-label" for="flexRadioDefault4">
-                    GG
-                  </label>
-                </div>
-              </li>
-              <li class="list-group-item">
-                Cor:    
-                <div class="form-check-inline" style="margin-left: 280px;">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault21" checked>
-                  <label class="form-check-label" for="flexRadioDefault21">
-                    Mostarda
-                  </label>
-                </div>
-                <div class="form-check-inline">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault22" checked>
-                  <label class="form-check-label" for="flexRadioDefault22">
-                    Preta
-                  </label>
-                </div>
-              </li>
-            </ul>
-
-            <div class="row" style="margin-top: 50px;">
-              <div class="col">
-                <h2 style="margin-left: 20px;"><strong>R$ 58,00</strong></h2>
-              </div>
-              <div class="col">
-                <button type="button" class="btn btn-outline-secondary w-75" style="margin-left: 30px;">Comprar</button>
-              </div>
-            </div>
-            <a href="#" class="link-secondary" style="margin-left: 20px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" href="#" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-              </svg> Adicionar à lista de desejos
-            </a>
-        </div> 
-        <div class="col">
-          <img src="images/jaqueta.jpg" class="justify-content-center" style="margin-left: 40px;" height="400" width="380">
-        </div> 
+        ?>
     </div>
   </div>
    <!--Rodapé-->
