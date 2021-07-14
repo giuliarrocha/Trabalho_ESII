@@ -124,7 +124,19 @@
             <a class="nav-link active" href="aba_compras.php">Compras</a>
           </li>
         </ul>
-
+        <div class="row" >
+                <div class="row main align-items-center">
+                    <div class="col-1" style="margin: 10px"></div>
+                    <div class="col">
+                        <div class="row text-muted"><b>Produto</b></div>
+                    </div>
+                    <div style="text-align:center" class="col">Empresa</div>
+                    <div style="text-align:center" class="col">Código de compra</div>
+                    <div style="text-align:right" class="col">Preco total
+                    </div>
+                </div>
+              </div>
+        
         <?php
             $cod_produto = isset($_GET['cod_produto'])?$_GET['cod_produto']:0;
 
@@ -134,7 +146,7 @@
             }
             // Mostra dados dos produtos
             $cpf = $_SESSION['cpf'];
-            $query = "SELECT * FROM produto, lista_compra, compra WHERE cod_listaCompra = cod_compra AND cod_listaProdutoCompra = cod_produto AND cpf_listaCompraCliente = '$cpf'";
+            $query = "SELECT * FROM produto, lista_compra, compra, empresa WHERE cnpj = cnpj_empresa AND cod_listaCompra = cod_compra AND cod_listaProdutoCompra = cod_produto AND cpf_listaCompraCliente = '$cpf'";
             $result = mysqli_query($conexao, $query) or die(mysql_error());
             
             while($row = mysqli_fetch_array($result)){
@@ -145,52 +157,15 @@
                         <div class="row text-muted">'.$row['nome_produto'].'</div>
                     </div>
                     <div style="text-align:center" class="col">'.$row['nome'].'</div>
-                    <div style="text-align:center" class="col">Compra: '.$row['cod_compra'].'</div>
+                    <div style="text-align:center" class="col">'.$row['cod_compra'].'</div>
                     <div style="text-align:right" class="col">R&dollar; '.number_format($row['preco_produto'], 2).'
                         
                     </div>
                 </div>
               </div>';
             }
-        ?>
-        <div class="row" >
-          <div class="row main align-items-center">
-              <div class="col-1" style="margin: 10px"><img class="img-fluid" src="images/jaqueta.jpg"></div>
-              <div class="col">
-                  <div class="row text-muted">Jaqueta de couro</div>
-              </div>
-
-              <div class="col" style="margin-left: 0px; text-align:center">
-                 <a href="#"><button type="button" onclick="decrementar()" class="btn btn-sm btn-sm btn-outline-dark">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
-  <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
-</svg></button></a>
-                <input id="mudarNumero" type="text" readonly maxlength="4" size="4" value="1" style="border: 0; text-align: center">
-                <a href="#" class="border"><button type="button" onclick="incrementar()" class="btn btn-sm btn-outline-success">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-  <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"></path>
-</svg></button></a> 
-              </div>
-              
-              
-              <div style="text-align:right" class="col">R&dollar; 44.00 </div>
-          </div>
-        </div>
-
-
-
-
-      </div>
-
-      <div class="row" style="margin-top: 10px;">
-        <div class="col">
-          <div class="d-flex justify-content-start">
-            <h3>Total:</h3>
-          </div>
-          <div class="d-flex justify-content-end">
-          </div>
-        </div>
-      </div>
+        ?>    
+          
     </div>
   </div>
 
