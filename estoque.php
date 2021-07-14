@@ -1,3 +1,13 @@
+<?php
+    // inicia sessao
+    session_start();
+    if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
+        header('Location: ../pagina_inicial.php');
+        exit;
+        return;
+    }
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -100,37 +110,44 @@
                         <table class="table table-striped table align-middle">
                             <thead>
                               <tr>
-                                <th scope="col">Código</th>
-                                <th scope="col">Nome</th>
-                                <th scope="col">Descrição</th>
-                                <th scope="col">Imagem</th>
-                                <th scope="col">Quantidade</th>
-                                <th scope="col">Preço</th>
-                                <th scope="col">Promoção</th>
-                                <th scope="col">Promoção(%)</th>
+                                <th scope="col" style="text-align: center">Código</th>
+                                <th scope="col"  style="text-align: center">Nome</th>
+                                <th scope="col" style="text-align: center">Descrição</th>
+                                <th scope="col" style="text-align: center">Imagem</th>
+                                <th scope="col" style="text-align: center">Quantidade</th>
+                                <th scope="col" style="text-align: center">Preço</th>
+                                <th scope="col" style="text-align: center">Promoção</th>
+                                <th scope="col" style="text-align: center">Promoção(%)</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <td>1234</td>
-                                <td>Bloco de Notas</td>
-                                <td>Bonito</td>
-                                <td>LinkImagem</td>
-                                <td>40</td>
-                                <td>32.50</td>
-                                <td>S</td>
-                                <td>10</td>
-                              </tr>
-                              <tr>
-                                <td>8458</td>
-                                <td>Caderno</td>
-                                <td>Feio</td>
-                                <td>LinkImagem</td>
-                                <td>12</td>
-                                <td>44.90</td>
-                                <td>N</td>
-                                <td>NULL</td>
-                              </tr>
+                                <?php
+                                    // prepara conexao
+                                    $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+                                    
+                                    if($conexao) {
+                                        echo mysqli_connect_error();
+                                    }
+
+                                    $cnpj = $_SESSION['cnpj'];
+                                    $query = "SELECT * FROM produto WHERE cnpj_empresa = '$cnpj'";
+                                    $result = mysqli_query($conexao, $query) or die(mysql_error());
+                                    
+                                    while($row = mysqli_fetch_array($result)) {
+                                        echo '<tr>
+                                                <td style="text-align: center">'.$row['cod_produto'].'</td>
+                                                <td style="text-align: center">'.substr($row['nome_produto'], 0,4).'..</td>
+                                                <td style="text-align: center">'.substr($row['descricao_produto'], 0,4).'..</td>
+                                                <td style="text-align: center">'.substr($row['imagem'], 0,4).'..</td>
+                                                <td style="text-align: center">'.$row['qnt_produto'].'</td>
+                                                <td>R$ '.number_format($row['preco_produto'], 2).'</td>
+                                                <td style="text-align: center">'; if($row['tem_promocao'] == "1") echo 'S'; else echo 'N';
+                                                echo '</td>
+                                                <td style="text-align: center">'.$row['porc_promocao'].'</td>
+                                            </tr>';
+                                    }
+                                    
+                                ?>
                             </tbody>
                           </table>
                     </div>

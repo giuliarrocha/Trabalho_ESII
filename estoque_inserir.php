@@ -1,3 +1,13 @@
+<?php
+    // inicia sessao
+    session_start();
+    if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
+        header('Location: ../pagina_inicial.php');
+        exit;
+        return;
+    }
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -98,15 +108,34 @@
                 <div class="row">
                     <h3>Dados do produto</h3>
                 </div>
+                <form action="backend/add_produto.php" method="post">
                 <div class="row">
-                    <div class="form-group"> 
-                        <label for="codigoProduto"> </label> <input type="text" name="codigoProduto" placeholder="Código do produto" required class="form-control ">
-                    </div>
+                    <!-- Código do produto insere automaticamente -->
                     <div class="form-group"> 
                         <label for="nomeProduto"> </label> <input type="text" name="nomeProduto" placeholder="Nome do produto" required class="form-control ">
                     </div>
+                    <div class="form-group" style="margin-top:25px"> 
+                        <?php
+                            // prepara conexao
+                            $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+                            
+                            if($conexao) {
+                                echo mysqli_connect_error();
+                            }
+                            
+                            $query = "SELECT * FROM categoria";
+                            $result = mysqli_query($conexao, $query) or die(mysql_error());
+                            echo '<select name="categoria" class="form-select form-select" aria-label=".form-select">';
+                            echo '<option value="1">Selecione a categoria</option>';
+                            while($row = mysqli_fetch_array($result)) {
+                                echo '<option value="'.$row['cod_categoria'].'">'.$row['nome_categoria'].'</option>';
+                            }
+                            echo '</select>';
+                        
+                        ?>
+                        </div>
                     <div class="form-text" style="margin-top: 25px;">
-                        <textarea class="form-control" placeholder="Descrição" id="TextareaDescricaoProduto" rows="3"></textarea>
+                        <textarea class="form-control" placeholder="Descrição" id="TextareaDescricaoProduto" name="TextareaDescricaoProduto" rows="3"></textarea>
                     </div>
                     <div class="form-group"> 
                         <label for="linkImagem"> </label> <input type="text" name="LinkImagem" placeholder="Link da imagem" required class="form-control ">
@@ -128,13 +157,13 @@
                     <div class="col">
                         <label for="exampleFormControlCheckPromo" class="form-label">Promoção:</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <input class="form-check-input" type="radio" name="promocao" value="1" id="flexRadioDefault1">
                             <label class="form-check-label" for="flexRadioDefault1">
                               Sim
                             </label>
                           </div>
                           <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                            <input class="form-check-input" type="radio" name="promocao" value="0" id="flexRadioDefault2" checked>
                             <label class="form-check-label" for="flexRadioDefault2">
                               Não
                             </label>
@@ -148,8 +177,9 @@
                 </div>
                 
                 <div class="row" style="margin-top: 40px;">
-                    <button type="button" class="btn btn-outline-secondary">Inserir produto</button>
+                    <button type="submit" name="submit" class="btn btn-outline-secondary">Inserir produto</button>
                 </div>
+            </form>
             </div>
 
         </div>
