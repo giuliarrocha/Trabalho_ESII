@@ -101,10 +101,10 @@
     <div class="row">
       <div class="col">
         <h2>Carrinho de Compras</h2>
-        <p>Verfique os produtos no seu carrinho</p>
+        <p>Veja os seus produtos favoritos e no seu carrinho!</p>
         <ul class="nav nav-tabs nav-fill" style="margin-top: 30px;">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Produtos</a>
+            <a class="nav-link active" aria-current="page" href="#">Favoritos</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="">Detalhes</a>
