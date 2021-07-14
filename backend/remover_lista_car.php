@@ -21,7 +21,7 @@
         $cod_listaProduto = $_GET['cod_produto'];
         $cpf = $_SESSION['cpf'];
 
-        $query = "DELETE FROM lista_carrinho WHERE cpf_listacliente = '$cpf' AND cod_listaProduto = '$cod_favProduto';";
+        $query = "DELETE FROM lista_carrinho WHERE cpf_listacliente = '$cpf' AND cod_listaProduto = '$cod_listaProduto';";
         $result = mysqli_query($conexao, $query) or die(mysql_error());
     }
     

@@ -177,16 +177,6 @@
           </div>
         </div>
 
-        <script>
-            var i = 1;
-            function incrementar() {
-                document.getElementById('mudarNumero').value = ++i;
-            }
-            function decrementar() {
-                if(i > 0)
-                    document.getElementById('mudarNumero').value = --i;
-            }
-        </script>
 
 
 
@@ -198,7 +188,6 @@
             <h3>Total:</h3>
           </div>
           <div class="d-flex justify-content-end">
-            <a class="btn btn-outline-secondary btn-lg" href="#">Continuar compra</a>
           </div>
         </div>
       </div>
