@@ -19,7 +19,7 @@
    <link rel="stylesheet" href="css/bootstrap.min.css">
    <link rel="stylesheet" href="css/style.css" />
    <link rel="stylesheet" href="css/informacoes.css" />
-   <title>Informações da Empresa</title>
+   <title>Informações Gerais</title>
  </head>
 
  <body>
@@ -111,18 +111,18 @@
 
     <div class="row">
         <div class="col-md-6"> <img src="images/exemplo_imagem.png" alt=""> </div>
-        <div class="col-md-6" style="margin-top: 60px;">  <h2>Informações da Empresa</h2> </div>  
+        <div class="col-md-6" style="margin-top: 60px;">  <h2>Informações Gerais</h2> </div>  
     </div>
 
     <div class="row">
         <div class="col-md-3">
             <div class="container">
                 <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action"> Página Inicial </a>
+                    <a href="#" class="list-group-item list-group-item-action">Página Inicial </a>
                     <a href="#" class="list-group-item list-group-item-action">Informações Gerais</a>
-                    <a href="#" class="list-group-item list-group-item-action">Estoque</a>
-                    <a href="#" class="list-group-item list-group-item-action">Vendas</a>
-                    <a href="#" class="list-group-item list-group-item-action"> Feedback</a>
+                    <a href="#" class="list-group-item list-group-item-action">Seus favoritos</a>
+                    <a href="#" class="list-group-item list-group-item-action">Seus pedidos</a>
+                    <a href="#" class="list-group-item list-group-item-action">Seu carrinho</a>
                 </div>
             </div>
         </div>

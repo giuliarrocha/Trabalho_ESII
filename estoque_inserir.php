@@ -100,7 +100,7 @@
                         <a href="#" class="list-group-item list-group-item-action">Informações Gerais</a>
                         <a href="#" class="list-group-item list-group-item-action">Estoque</a>
                         <a href="#" class="list-group-item list-group-item-action">Vendas</a>
-                        <a href="#" class="list-group-item list-group-item-action"> Feedback</a>
+                        <a href="#" class="list-group-item list-group-item-action">Histórico de vendas</a>
                     </div>
                 </div>
             </div>
