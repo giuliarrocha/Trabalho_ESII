@@ -173,7 +173,7 @@
         </div>
         <div class="col">
           <div class="d-flex justify-content-end">
-            <a class="btn btn-outline-secondary btn-lg" href="#">Continuar compra</a>
+            <a class="btn btn-outline-secondary btn-lg" href="pagamento_cartao.php">Continuar compra</a>
           </div>
         </div>
       </div>

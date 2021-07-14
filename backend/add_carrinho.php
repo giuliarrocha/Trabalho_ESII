@@ -41,7 +41,8 @@
         exit;
         return;
     }
-   header('Location: ../pagina_produto_descricao.php?cod_produto='.$cod_listaProduto);
+    //header('Location: ../pagina_produto_descricao.php?cod_produto='.$cod_listaProduto);
+    header('Location: ../aba_carrinho_compras.php');
     exit;
     return;
 ?>
