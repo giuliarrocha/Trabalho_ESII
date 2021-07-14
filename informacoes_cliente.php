@@ -1,3 +1,13 @@
+<?php
+    // inicia sessao
+    session_start();
+    if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "empresa") {
+        header('Location: pagina_inicial.php');
+        exit;
+        return;
+    }
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -9,7 +19,7 @@
    <link rel="stylesheet" href="css/bootstrap.min.css">
    <link rel="stylesheet" href="css/style.css" />
    <link rel="stylesheet" href="css/informacoes.css" />
-   <title>Informações do Cliente</title>
+   <title>Informações da Empresa</title>
  </head>
 
  <body>
@@ -101,7 +111,7 @@
 
     <div class="row">
         <div class="col-md-6"> <img src="images/exemplo_imagem.png" alt=""> </div>
-        <div class="col-md-6" style="margin-top: 60px;">  <h2>Informações da empresa</h2> </div>  
+        <div class="col-md-6" style="margin-top: 60px;">  <h2>Informações da Empresa</h2> </div>  
     </div>
 
     <div class="row">
@@ -118,44 +128,64 @@
         </div>
         <div class="col">
             <h2>Dados da empresa</h2>
-            <div class="form-group"> 
-                <label for="nomeEmpresa"> </label> <input type="text" name="username" placeholder="Nome da empresa" required class="form-control ">
-            </div>
-            <div class="form-group"> 
-                <label for="cnpj"> </label> <input type="text" name="username" placeholder="CNPJ" required class="form-control ">
-            </div>
+            <?php
+                // prepara conexao
+                $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+                
+                if($conexao) {
+                    echo mysqli_connect_error();
+                }
 
-            <h2 style = "margin-top: 15px;">Endereço</h2>
-            <div class="form-group"> 
+                $cpf = $_SESSION['cpf'];
+                $query = "SELECT * FROM cliente WHERE cpf = '$cpf'";
+                $result = mysqli_query($conexao, $query) or die(mysql_error());
+                
+                if($row = mysqli_fetch_array($result)) {
+                    
+            echo '
+                <form action="backend/atualizar_cliente.php" method="post">
+                
                 <div class="row">
-                    <div class="col-md-8"> 
-                        <label for="ruaNome"> </label> <input type="text" name="username" placeholder="Rua" required class="form-control "> 
+                    <div class="col-md-6"> 
+                        <p style="margin-top:15px">CPF:</p>
+                        <input value="'.$row['cpf'].'" type="text" readonly name="cpf" placeholder="CPF" required class="form-control ">
                     </div>
-                    <div class="col-md-4"> 
-                        <label for="ruaNum"> </label> <input type="text" name="username" placeholder="numero" required class="form-control "> 
+                    <div class="col-md-6"> 
+                        <p style="margin-top:15px">Nome:</p>
+                        <input value="'.$row['nome'].'" type="text" name="nome" placeholder="Nome" required class="form-control ">
+                    </div>
+                </div>
+
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <p style="margin-top:15px">E-mail:</p>
+                        <input value="'.$row['email'].'" type="text" readonly name="email" placeholder="E-mail" required class="form-control ">
+                    </div>
+                    <div class="col-md-6">
+                        <p style="margin-top:15px">Endereço:</p>
+                        <input value="'.$row['endereco'].'" type="text" name="endereco" placeholder="Endereco" required class="form-control ">
                     </div>
                 </div>
                 
-                <div class="row">
-                    <div class="col-md-8"> 
-                        <label for="bairroNome"> </label> <input type="text" name="username" placeholder="Nome do Bairro" required class="form-control "> 
-                    </div>
-                    <div class="col-md-4"> 
-                        <label for="cep"> </label> <input type="text" name="username" placeholder="CEP" required class="form-control "> 
-                    </div>
-                </div>
 
                 <div class="row">
-                    <div class="col-md-4">
-                        <label for="complemento"> </label> <input type="text" name="username" placeholder="Complemento" required class="form-control "> 
+                    <div class="col-md-6">
+                        <p style="margin-top:15px">Senha:</p>
+                        <input value="'.$row['senha'].'" type="password" name="senha" placeholder="Senha" required class="form-control ">
                     </div>
-                    <div class="col-md-4">
-                        <label for="cidade"> </label> <input type="text" name="username" placeholder="Cidade" required class="form-control "> 
-                    </div>
-                    <div class="col-md-4">
-                        <label for="estado"> </label> <input type="text" name="username" placeholder="Estado" required class="form-control "> 
+                    <div class="col-md-6">
+                        <p style="margin-top:15px">Telefone:</p>
+                        <input value="'.$row['telefone'].'" type="text" name="telefone" placeholder="Telefone" required class="form-control ">
                     </div>
                 </div>
+                <button class="btn btn-outline-secondary w-100" style="margin-top:15px" type="submit" name="submit">
+                    Atualizar informações
+                </button>
+                </form>';
+                }
+            ?>
+            
             </div>
         </div>
 
