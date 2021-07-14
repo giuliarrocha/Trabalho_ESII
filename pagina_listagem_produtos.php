@@ -177,11 +177,11 @@
                 $cont = 4;
                 do {
                     echo '<div class="col">
-                    <div class="card w-75" style="width: 9rem;">
+                    <div class="card" style="width: 9rem;">
                     <a style="text-decoration:none; color: black" href="pagina_produto_descricao.php?cod_produto='.$row['cod_produto'].'">
                         <img src="'.$row['imagem'].'" width="150" height="180" class="card-img-top" alt="...">
                         <ul class="list-group list-group-flush text-center">
-                            <li class="list-group-item" style="height: 33px;">
+                            <li class="list-group-item" style="height: 100px;">
                                 <h6 class="card-title"><strong>'.$row['nome_produto'].'</strong></h6>
                             </li>
                             <li class="list-group-item" style="height: 33px;">
@@ -277,7 +277,7 @@
                             $habilitado = " disabled";
                         }
                         echo '
-                            <!-- Setinha esquerda -->
+                            <!-- Setinha direita -->
                             <li class="page-item'.$habilitado.'">
                             <a class="page-link" href="'.$href.'" aria-disabled="'.$verdadeiro.'" aria-label="Previous">
                                 <span aria-hidden="true">&raquo;</span>
