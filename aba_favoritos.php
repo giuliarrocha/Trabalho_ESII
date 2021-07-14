@@ -156,7 +156,6 @@
       <div class="row" style="margin-top: 10px;">
         <div class="col">
           <div class="d-flex justify-content-end">
-            <a class="btn btn-outline-secondary btn-lg" href="#">Continuar compra</a>
           </div>
         </div>
       </div>

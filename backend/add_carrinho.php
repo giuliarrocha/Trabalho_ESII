@@ -25,15 +25,23 @@
         $row = mysqli_fetch_array($result);
         if(!$row){
             $query = "INSERT INTO lista_carrinho (cod_listaProduto, cpf_listacliente, qnt_produtoCarrinho) VALUES ('$cod_listaProduto', '$cpf', '$qnt_produtoCarrinho');";
+            echo $qnt_produtoCarrinho;
         } else {
-            $query = "UPDATE lista_carrinho SET qnt_produtoCarrinho = '$qnt_produtoCarrinho'";
+            if($qnt_produtoCarrinho > 0 ){
+                $query = "UPDATE lista_carrinho SET qnt_produtoCarrinho = '$qnt_produtoCarrinho' WHERE cpf_listacliente = '$cpf' AND cod_listaProduto = '$cod_listaProduto'";
+            }
+            
         }
         
         $result = mysqli_query($conexao, $query) or die(mysql_error());
         $conexao->close();
     }
-    
-    header('Location: ../pagina_produto_descricao.php?cod_produto='.$cod_listaProduto);
+    if(isset($_REQUEST['retornar'])) {
+        header('Location: ../'.$_REQUEST['retornar']);
+        exit;
+        return;
+    }
+   header('Location: ../pagina_produto_descricao.php?cod_produto='.$cod_listaProduto);
     exit;
     return;
 ?>

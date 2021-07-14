@@ -133,7 +133,8 @@
             $cpf = $_SESSION['cpf'];
             $query = "SELECT * FROM produto, empresa, lista_carrinho WHERE cnpj = produto.cnpj_empresa AND cod_listaProduto = cod_produto AND cpf_listacliente = '$cpf'";
             $result = mysqli_query($conexao, $query) or die(mysql_error());
-            
+            $total = 0;
+
             while($row = mysqli_fetch_array($result)){
                 echo '<div class="row" >
                 <div class="row main align-items-center">
@@ -141,57 +142,34 @@
                     <div class="col">
                         <div class="row text-muted">'.$row['nome_produto'].'</div>
                     </div>
-                    <div style="text-align:center" class="col">'.$row['nome'].'</div>
-                    <div style="text-align:right" class="col">R&dollar; '.number_format($row['preco_produto'], 2).'
-                        <a href="backend/remover_lista_car.php?cod_produto='.$row['cod_favProduto'].'&retorna=aba_favoritos.php"><svg style="color:red; margin-left:5px; margin-bottom:5px" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+
+
+                    <div class="col" style="margin-left: 0px; text-align:center">
+                 <a href="backend/add_carrinho.php?cod_produto='.$row['cod_produto'].'&mudarNumero='.($row['qnt_produtoCarrinho']-1).'&submit=1&retornar=aba_carrinho_compras.php"><button type="button" class="btn btn-sm btn-sm btn-outline-dark">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+                    </svg></button></a>
+                <input id="mudarNumero" type="text" readonly maxlength="4" size="4" value="'.$row['qnt_produtoCarrinho'].'" style="border: 0; text-align: center">
+                <a href="backend/add_carrinho.php?cod_produto='.$row['cod_produto'].'&mudarNumero='.($row['qnt_produtoCarrinho']+1).'&submit=1&retornar=aba_carrinho_compras.php" class="border"><button type="button" class="btn btn-sm btn-outline-success">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"></path>
+                </svg></button></a> 
+              </div>
+                    <div style="text-align:right" class="col">R&dollar; '.number_format($row['qnt_produtoCarrinho']*$row['preco_produto'], 2).'
+                        <a href="backend/remover_lista_car.php?cod_produto='.$row['cod_listaProduto'].'&retorna=aba_carrinho_compras.php"><svg style="color:red; margin-left:5px; margin-bottom:5px" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
                         </svg></a>
                     </div>
                 </div>
               </div>';
+              $total += $row['qnt_produtoCarrinho']*$row['preco_produto'];
             }
         ?>
-        <div class="row" >
-          <div class="row main align-items-center">
-              <div class="col-1" style="margin: 10px"><img class="img-fluid" src="images/jaqueta.jpg"></div>
-              <div class="col">
-                  <div class="row text-muted">Jaqueta de couro</div>
-              </div>
-
-              <div class="col" style="margin-left: 0px; text-align:center">
-                 <a href="#"><button type="button" onclick="decrementar()" class="btn btn-sm btn-sm btn-outline-dark">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
-  <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
-</svg></button></a>
-                <input id="mudarNumero" type="text" readonly maxlength="4" size="4" value="1" style="border: 0; text-align: center">
-                <a href="#" class="border"><button type="button" onclick="incrementar()" class="btn btn-sm btn-outline-success">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-  <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"></path>
-</svg></button></a> 
-              </div>
-              
-              
-              <div style="text-align:right" class="col">R&dollar; 44.00 <a href="#"><svg style="color:red; margin-left:5px; margin-bottom:5px" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
-</svg></a></div>
-          </div>
-        </div>
-
-        <script>
-            var i = 1;
-            function incrementar() {
-                document.getElementById('mudarNumero').value = ++i;
-            }
-            function decrementar() {
-                if(i > 0)
-                    document.getElementById('mudarNumero').value = --i;
-            }
-        </script>
       </div>
 
       <div class="row" style="margin-top: 10px;">
         <div class="d-flex justify-content-start">
-            <h3>Total:</h3>
+            <h4>Total: <?php echo number_format($total, 2); ?></h4>
         </div>
         <div class="col">
           <div class="d-flex justify-content-end">
