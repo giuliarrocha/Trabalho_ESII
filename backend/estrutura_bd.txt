@@ -150,7 +150,7 @@ ALTER TABLE lista_carrinho ADD CONSTRAINT FK_cod_listaProduto
 FOREIGN KEY(cod_listaProduto) REFERENCES produto(cod_produto);
 
 -- LISTA DE COMPRA
-ALTER TABLE lista_compra ADD cpf_listaCompraCliente BIGINT NOT NULL;
+ALTER TABLE lista_compraa ADD cpf_listaCompraCliente BIGINT NOT NULL;
 ALTER TABLE lista_compra ADD CONSTRAINT FK_cpf_listaCompraCliente
 FOREIGN KEY(cpf_listaCompraCliente ) REFERENCES cliente(cpf);
 
