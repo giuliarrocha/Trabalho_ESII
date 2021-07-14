@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
+<?php
 
+    // inicia sessao
+    session_start();?>
  <head>
    <!-- Required meta tags -->
    <meta charset="utf-8">
@@ -98,7 +101,8 @@
   <div class="container" style="margin-top: 70px; margin-left: 100px; margin-right: 100px;">
     <div class="row">
         <?php
-            $cod_produto = 1;//$_GET['codProduto'];
+
+            $cod_produto = isset($_GET['cod_produto'])?$_GET['cod_produto']:0;
 
             $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
             if($conexao) {
@@ -133,17 +137,43 @@
                   <div class="col">
                     <button type="button" class="btn btn-outline-secondary w-75" style="margin-left: 30px;">Comprar</button>
                   </div>
-                </div>
-                <a href="#" class="link-secondary" style="margin-left: 20px;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" href="#" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                  </svg> Adicionar à lista de desejos
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                    </svg>
-                </a>
-            </div> ';
-            // verificar se já está na lista de favoritos
+                </div>';
+
+            // Não logado
+            if(!isset($_SESSION['tipo'])) {
+                echo '<a href="login_usuario.php" class="link-secondary" style="margin-left: 20px; text-decoration:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                            </svg> Adicionar à lista de desejos
+                        </a>
+                    </div> ';
+            } else if ($_SESSION['tipo'] == "cliente") {
+                $cpf = $_SESSION['cpf'];
+                $query1 = "SELECT * FROM produto, lista_favorito WHERE lista_favorito.cpf_favCliente = '$cpf' AND lista_favorito.cod_favProduto = cod_produto AND cod_produto = '$cod_produto'";
+                $result1 = mysqli_query($conexao, $query1) or die(mysql_error());
+
+                // verificar se já está na lista de favoritos
+                if($row1 = mysqli_fetch_array($result1)) {
+                    // Já add produto à lista de favoritos
+                    echo '<a href="backend/remover_lista_fav.php?cod_produto='.$cod_produto.'" class="link-secondary" style="margin-left: 20px; text-decoration:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" href="#" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg> Remover da lista de desejos
+                        </a>
+                    </div> ';
+                } else {
+                    // Não adicionado aos favoritos ainda
+                    echo '<a href="backend/add_lista_fav.php?cod_produto='.$cod_produto.'" class="link-secondary" style="margin-left: 20px; text-decoration:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                            </svg> Adicionar à lista de desejos
+                        </a>
+                    </div> ';
+                }
+                
+            }
+            // Se for empresa não mostra  
+            
             echo '<div class="col">
               <img src="'.$row['imagem'].'" class="justify-content-center" style="margin-left: 40px;" height="400" width="380">
             </div>';

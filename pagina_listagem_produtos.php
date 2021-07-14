@@ -178,6 +178,7 @@
                 do {
                     echo '<div class="col">
                     <div class="card w-75" style="width: 9rem;">
+                    <a style="text-decoration:none; color: black" href="pagina_produto_descricao.php?cod_produto='.$row['cod_produto'].'">
                         <img src="'.$row['imagem'].'" width="150" height="180" class="card-img-top" alt="...">
                         <ul class="list-group list-group-flush text-center">
                             <li class="list-group-item" style="height: 33px;">
@@ -187,6 +188,7 @@
                                 <p>R$ '.$row['preco_produto'].'</p>
                             </li>
                         </ul>
+                    </a>    
                     </div>
                 </div>';
                     if(!--$cont) break;

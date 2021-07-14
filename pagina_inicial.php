@@ -242,7 +242,7 @@
                             do {
                                 echo '<div class="col">
                                 <div class="card" style="width: 8rem;">
-                                    <a style="text-decoration:none; color: black" href="pagina_listagem_produtos.php?cnpj='.$row['cnpj'].'">                                
+                                    <a style="text-decoration:none; color: black" href="pagina_listagem_produtos.php?cnpj='.$row['cnpj'].'">
                                     <img src="'.$row['imagem_logo'].'" width="120" height="120" class="card-img-top" alt="...">
                                     <div class="card-body">
                                     <h6>'.$row['nome'].'</h6>
