@@ -1,3 +1,14 @@
+
+<?php
+    // inicia sessao
+    session_start();
+    if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "empresa") {
+        header('Location: ../pagina_inicial.php');
+        exit;
+        return;
+    }
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -100,20 +111,46 @@
   <div class="container" style="margin-top: 70px; margin-left: 100px; margin-right: 100px;">
     <div class="row">
       <div class="col">
-        <h2>PRODUTOS</h2>
+        <h2>Produtos</h2>
         <p>Veja os seus produtos favoritos, no seu carrinho e já comprados!</p>
         <ul class="nav nav-tabs nav-fill" style="margin-top: 30px;">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="">Lista de favoritos</a>
+            <a class="nav-link" href="aba_favoritos.php">Lista de favoritos</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="aba_carrinho_compras.php">Carrinho de compras</a>
+            <a class="nav-link active" href="aba_carrinho_compras.php">Carrinho de compras</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="aba_compras.php">Compras</a>
           </li>
         </ul>
-
+        <?php
+            $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+            if($conexao) {
+                echo mysqli_connect_error();
+            }
+            // Mostra dados dos produtos
+            $cpf = $_SESSION['cpf'];
+            $query = "SELECT * FROM produto, empresa, lista_carrinho WHERE cnpj = produto.cnpj_empresa AND cod_listaProduto = cod_produto AND cpf_listacliente = '$cpf'";
+            $result = mysqli_query($conexao, $query) or die(mysql_error());
+            
+            while($row = mysqli_fetch_array($result)){
+                echo '<div class="row" >
+                <div class="row main align-items-center">
+                    <div class="col-1" style="margin: 10px"><img width="500" height="500" class="img-fluid" src="'.$row['imagem'].'"></div>
+                    <div class="col">
+                        <div class="row text-muted">'.$row['nome_produto'].'</div>
+                    </div>
+                    <div style="text-align:center" class="col">'.$row['nome'].'</div>
+                    <div style="text-align:right" class="col">R&dollar; '.number_format($row['preco_produto'], 2).'
+                        <a href="backend/remover_lista_car.php?cod_produto='.$row['cod_favProduto'].'&retorna=aba_favoritos.php"><svg style="color:red; margin-left:5px; margin-bottom:5px" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                        </svg></a>
+                    </div>
+                </div>
+              </div>';
+            }
+        ?>
         <div class="row" >
           <div class="row main align-items-center">
               <div class="col-1" style="margin: 10px"><img class="img-fluid" src="images/jaqueta.jpg"></div>
@@ -134,7 +171,7 @@
               </div>
               
               
-              <div style="text-align:center" class="col">R&dollar; 44.00 <a href="#"><svg style="color:red; margin-left:5px; margin-bottom:5px" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+              <div style="text-align:right" class="col">R&dollar; 44.00 <a href="#"><svg style="color:red; margin-left:5px; margin-bottom:5px" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
 </svg></a></div>
           </div>
@@ -150,24 +187,19 @@
                     document.getElementById('mudarNumero').value = --i;
             }
         </script>
-
-
-
       </div>
 
       <div class="row" style="margin-top: 10px;">
+        <div class="d-flex justify-content-start">
+            <h3>Total:</h3>
+        </div>
         <div class="col">
           <div class="d-flex justify-content-end">
             <a class="btn btn-outline-secondary btn-lg" href="#">Continuar compra</a>
           </div>
-          
         </div>
       </div>
-
     </div>
-
-    
-    
   </div>
 
 

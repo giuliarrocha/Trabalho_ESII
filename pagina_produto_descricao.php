@@ -135,9 +135,35 @@
                     <h2 style="margin-left: 20px;"><strong>R$ '.$row['preco_produto'].'</strong></h2>
                   </div>
                   <div class="col">
-                    <a><button type="button" class="btn btn-outline-secondary w-75" style="margin-left: 30px;">Adicionar ao carrinho</button></a>
+            <form action="backend/add_carrinho.php" method="post">
+                <div class="col" style="margin-bottom: 10px; text-align:center">
+                <a href="#"><button type="button" onclick="decrementar()" class="btn btn-sm btn-sm btn-outline-dark">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+                    </svg></button></a>
+                        <input id="mudarNumero" name="mudarNumero" type="text" readonly maxlength="4" size="4" value="1" style="border: 0; text-align: center">
+                                <a href="#" class="border"><button type="button" onclick="incrementar()" class="btn btn-sm btn-outline-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"></path>
+                    </svg></button></a> 
+                        </div>
+                    <input type="text" value="'.$row['cod_produto'].'" name="cod_produto" class="d-none"><button type="submit" name="submit" class="btn btn-outline-secondary w-75" style="margin-left: 30px;">Adicionar ao carrinho</button></form>
                   </div>
-                </div>';
+                </div>
+                
+                <div class="row" style="margin-top: 0px; text-align:right">
+                </div>
+                
+                <script>
+                var i = 1;
+                function incrementar() {
+                    document.getElementById(\'mudarNumero\').value = ++i;
+                }
+                function decrementar() {
+                    if(i > 1)
+                        document.getElementById(\'mudarNumero\').value = --i;
+                }
+                </script>';
 
             // Não logado
             if(!isset($_SESSION['tipo'])) {
@@ -163,13 +189,12 @@
                     </div> ';
                 } else {
                     // Não adicionado aos favoritos ainda
-                    echo '<a href="backend/add_lista_fav.php?cod_produto='.$cod_produto.'" class="link-secondary" style="margin-left: 20px; text-decoration:none;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                    echo '
+                    <a href="backend/add_lista_fav.php?cod_produto='.$cod_produto.'" class="link-secondary" style="margin-left: 0px; text-decoration:none;text-align:right">
+                            <svg style="" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
                             <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                            </svg> Adicionar à lista de desejos
-                            
-                        </a>
-                    </div> ';
+                            </svg> Adicionar à lista de desejos</a>
+                    </div>';
                 }
                 
             }
@@ -181,6 +206,7 @@
             }
 
         ?>
+               
     </div>
   </div>
    <!--Rodapé-->

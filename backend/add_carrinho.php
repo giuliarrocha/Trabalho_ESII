@@ -7,32 +7,33 @@
         return;
     }
 
-    // pega dados
-    if(isset($_GET['cod_produto'])){
-        // prepara conexao
-        $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
-        
-        if($conexao) {
-            echo mysqli_connect_error();
-        }
-        
-        // valida
-        $cod_favProduto = $_GET['cod_produto'];
+    // prepara conexao
+    $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+    
+    if($conexao) {
+        echo mysqli_connect_error();
+    }
+    
+    // valida
+    if(isset($_REQUEST['submit'])) {
+        $cod_listaProduto = $_REQUEST['cod_produto'];
+        $qnt_produtoCarrinho = $_REQUEST['mudarNumero'];
         $cpf = $_SESSION['cpf'];
 
-        $query = "SELECT * FROM lista_favorito WHERE cpf_favCliente = '$cpf' AND cod_favProduto = '$cod_favProduto';";
+        $query = "SELECT * FROM lista_carrinho WHERE cpf_listacliente = '$cpf' AND cod_listaProduto = '$cod_listaProduto';";
         $result = mysqli_query($conexao, $query) or die(mysql_error());
         $row = mysqli_fetch_array($result);
         if(!$row){
-            echo $cpf;
-            echo $cod_favProduto;
-            $query = "INSERT INTO lista_favorito (cod_favProduto, cpf_favCliente) VALUES ('$cod_favProduto', '$cpf');";
-            $result = mysqli_query($conexao, $query) or die(mysql_error());
-            $conexao->close();
+            $query = "INSERT INTO lista_carrinho (cod_listaProduto, cpf_listacliente, qnt_produtoCarrinho) VALUES ('$cod_listaProduto', '$cpf', '$qnt_produtoCarrinho');";
+        } else {
+            $query = "UPDATE lista_carrinho SET qnt_produtoCarrinho = '$qnt_produtoCarrinho'";
         }
+        
+        $result = mysqli_query($conexao, $query) or die(mysql_error());
+        $conexao->close();
     }
     
-    header('Location: ../pagina_produto_descricao.php?cod_produto='.$cod_favProduto.'');
+    header('Location: ../pagina_produto_descricao.php?cod_produto='.$cod_listaProduto);
     exit;
     return;
 ?>

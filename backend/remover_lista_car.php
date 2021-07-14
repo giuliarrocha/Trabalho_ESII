@@ -18,16 +18,14 @@
         }
         
         // valida
-        $cod_favProduto = $_GET['cod_produto'];
+        $cod_listaProduto = $_GET['cod_produto'];
         $cpf = $_SESSION['cpf'];
 
-        $query = "DELETE FROM lista_favorito WHERE cpf_favCliente = '$cpf' AND cod_favProduto = '$cod_favProduto';";
-        $result = mysqli_query($conexao, $query) or die(mysql_error());        
+        $query = "DELETE FROM lista_carrinho WHERE cpf_listacliente = '$cpf' AND cod_listaProduto = '$cod_favProduto';";
+        $result = mysqli_query($conexao, $query) or die(mysql_error());
     }
-    if(isset($_GET['retorna'])) {
-        $retorna = $_GET['retorna'];
-        header('Location: ../'.$retorna);
-    }else header('Location: ../pagina_produto_descricao.php?cod_produto='.$cod_favProduto.'');
+    
+    header('Location: ../aba_carrinho_compras.php');
     exit;
     return;
 ?>
