@@ -2,7 +2,7 @@
     // inicia sessao
     session_start();
     if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
-        header('Location: ../pagina_inicial.php');
+        header('Location: pagina_inicial.php');
         exit;
         return;
     }
