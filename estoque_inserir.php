@@ -157,7 +157,7 @@
                     <div class="col">
                         <label for="exampleFormControlCheckPromo" class="form-label">Promoção:</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="promocao" value="1" id="flexRadioDefault1">
+                            <input class="form-check-input" type="radio" name="promocao" value="1" id="flexRadioDefault1" >
                             <label class="form-check-label" for="flexRadioDefault1">
                               Sim
                             </label>
@@ -171,7 +171,7 @@
                     </div>
                     <div class="col">
                         <div class="form-group"> 
-                            <label for="porcentagPromo"> </label> <input type="text" name="porcentagPromo" placeholder="Porcentagem de desconto" required class="form-control ">
+                            <label for="porcentagPromo" > </label> <input type="text" name="porcentagPromo" placeholder="Porcentagem de desconto" required value="0" class="form-control ">
                         </div>
                     </div>
                 </div>

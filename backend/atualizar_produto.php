@@ -25,13 +25,15 @@
         $porcentagPromo = $_REQUEST['porcentagPromo'];
         $cnpj = $_SESSION['cnpj'];
         $categoria = $_REQUEST['categoria'];
+        $cod_produto = $_REQUEST['cod_produto'];
 
         if($promocao == "0") {
             $porcentagPromo = "0";
         }
 
-        $query = "INSERT INTO produto (cnpj_empresa, cod_catProduto, nome_produto, descricao_produto, imagem, preco_produto, qnt_produto, tem_promocao, porc_promocao) 
-                            VALUES ('$cnpj', '$categoria', '$nomeProduto', '$TextareaDescricaoProduto', '$LinkImagem', '$precoProduto', '$qntProduto', '$promocao', '$porcentagPromo');";
+        $query = "UPDATE produto SET cod_catProduto = '$categoria', nome_produto = '$nomeProduto', 
+        descricao_produto = '$TextareaDescricaoProduto', imagem = '$LinkImagem', preco_produto = '$precoProduto', 
+        qnt_produto = '$qntProduto', tem_promocao = '$promocao', porc_promocao = '$porcentagPromo' WHERE cod_produto = '$cod_produto';";
         mysqli_query($conexao, $query) or die(mysql_error());
         $conexao->close();
     }
