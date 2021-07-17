@@ -1,4 +1,7 @@
 <?php
+
+/* EXCLUIR ESSA PAG DEPOIS*/
+
     // inicia sessao
     session_start();
     if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
