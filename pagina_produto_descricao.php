@@ -3,7 +3,20 @@
 <?php
 
     // inicia sessao
-    session_start();?>
+    session_start();
+    
+    $cod_produto = isset($_GET['cod_produto'])?$_GET['cod_produto']:0;
+
+    $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+    if($conexao) {
+        echo mysqli_connect_error();
+    }
+    // Mostra dados do produto selecionado
+    $query = "SELECT * FROM produto, empresa WHERE empresa.cnpj = produto.cnpj_empresa AND cod_produto = '$cod_produto'";
+    $result = mysqli_query($conexao, $query) or die(mysql_error());
+    
+    $row = mysqli_fetch_array($result);
+        ?>
  <head>
    <!-- Required meta tags -->
    <meta charset="utf-8">
@@ -11,7 +24,7 @@
    <!-- Bootstrap CSS -->
    <link rel="stylesheet" href="css/bootstrap.min.css">
    <link rel="stylesheet" href="css/style.css" />
-   <title>Produto X (Em construção)</title>
+   <title><?php echo $row['nome_produto']; ?></title>
  </head>
 
  <body>
@@ -102,17 +115,7 @@
     <div class="row">
         <?php
 
-            $cod_produto = isset($_GET['cod_produto'])?$_GET['cod_produto']:0;
-
-            $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
-            if($conexao) {
-                echo mysqli_connect_error();
-            }
-            // Mostra dados do produto selecionado
-            $query = "SELECT * FROM produto, empresa WHERE empresa.cnpj = produto.cnpj_empresa AND cod_produto = '$cod_produto'";
-            $result = mysqli_query($conexao, $query) or die(mysql_error());
-            
-            if($row = mysqli_fetch_array($result)) {
+            if($row) {
                 echo '<div class="col">
                 <h2>'.$row['nome_produto'].'</h2>
                 <p class="text-body">'.$row['nome'].'</p>
