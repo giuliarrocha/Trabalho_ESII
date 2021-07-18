@@ -1,3 +1,13 @@
+<?php
+    // inicia sessao
+    session_start();
+    if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
+        header('Location: pagina_inicial.php');
+        exit;
+        return;
+    }
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -97,17 +107,55 @@
             <div class="col" style="margin-left: 100px; margin-right: 100px;">
                 <div class="container">
                     <div class="list-group">
-                        <a class="list-group-item list-group-item-action"><strong>Valor em estoque: </strong> R$780,00</a>
-                        <a class="list-group-item list-group-item-action"><strong>Faturamento mês Julho:</strong> R$400,00</a>
-                        <a class="list-group-item list-group-item-action"><strong>Faturamento do ano:</strong> RS15.250,96</a>
-                        <a class="list-group-item list-group-item-action"><strong>Faturamento desde o cadastro:</strong> R$35.245,99</a>
+                        <?php
+                        $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+                        if($conexao) {
+                            echo mysqli_connect_error();
+                        }
+                        $cnpj = $_SESSION['cnpj'];
+
+                        $fatura_estoque = 0;
+                        $fatura_mes = 0;
+                        $fatura_ano = 0;
+                        $fatura_total = 0;
+
+                        $query = "SELECT * FROM produto WHERE cnpj_empresa = '$cnpj'";
+                        $result = mysqli_query($conexao, $query) or die(mysql_error());
+                        while($row = mysqli_fetch_array($result)) {
+                            $fatura_estoque += $row['preco_produto'] * $row['qnt_produto'];
+                        }
+                        $query = "SELECT * FROM lista_compra, compra WHERE cod_listaCompra = cod_compra AND cod_compra IN (SELECT cod_compra FROM compra WHERE MONTH(data) = MONTH(CURRENT_DATE()) ) AND cod_listaProdutoCompra IN (SELECT cod_produto FROM produto WHERE cnpj_empresa = '$cnpj')";
+                        $result = mysqli_query($conexao, $query) or die(mysql_error());
+                        while($row = mysqli_fetch_array($result)) {
+                            $fatura_mes += $row['preco_unidade'] * $row['qnt_compraProduto'];
+                        }
+                        $query = "SELECT * FROM lista_compra, compra WHERE cod_listaCompra = cod_compra AND cod_compra IN (SELECT cod_compra FROM compra WHERE YEAR(data) = YEAR(CURRENT_DATE()) ) AND cod_listaProdutoCompra IN (SELECT cod_produto FROM produto WHERE cnpj_empresa = '$cnpj')";
+                        $result = mysqli_query($conexao, $query) or die(mysql_error());
+                        while($row = mysqli_fetch_array($result)) {
+                            $fatura_ano += $row['preco_unidade'] * $row['qnt_compraProduto'];
+                        }
+
+                        $query = "SELECT * FROM lista_compra, produto WHERE cod_listaProdutoCompra =  cod_produto AND cnpj_empresa = '$cnpj'";
+                        $result = mysqli_query($conexao, $query) or die(mysql_error());
+                        while($row = mysqli_fetch_array($result)) {
+                            $fatura_total += $row['preco_unidade'] * $row['qnt_compraProduto'];
+                        }
+
+                        echo '<a class="list-group-item list-group-item-action"><strong>Valor em estoque: </strong> R$ '.number_format($fatura_estoque, 2).'</a>
+                        <a class="list-group-item list-group-item-action"><strong>Faturamento do mês atual:</strong> R$ '.number_format($fatura_mes, 2).'</a>
+                        <a class="list-group-item list-group-item-action"><strong>Faturamento do ano:</strong> RS '.number_format($fatura_ano, 2).'</a>
+                        <a class="list-group-item list-group-item-action"><strong>Faturamento desde o cadastro:</strong> R$ '.number_format($fatura_total, 2).'</a>';
+                        ?>
                     </div>
                 </div>
             </div>
         </div>
             
         <div class="row" style="margin-top: 50px;">
-            <h5>12/07/2021 a 16/07/2021:</h5>
+            <h5><?php $d=strtotime("-1 Year");
+            $data_inicio = date("d/m/Y", $d);
+  echo $data_inicio;
+  $data_inicio = date("Y-m-d", $d); ?> a <?php $data_fim = date("d/m/Y"); echo $data_fim; ?>:</h5>
             <div class="table-responsive"  style="margin-top: 20px;">
                 <table class="table table-striped table align-middle">
                     <thead>
@@ -126,19 +174,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>3333</td>
-                            <td>14/07/2021</td>
-                            <td>14285947533</td>
-                            <td>YKPL-8</td>
-                            <td>10,00</td>
-                            <td>Rua Alfeneiros, 203</td>
-                            <td>1245</td>
-                            <td>2</td>
-                            <td>22,20</td>
-                            <td>4</td>
-                            <td>Recebido</td>
-                        </tr>
+                        <?php
+                        $data_fim = date("Y-m-d");
+                        $query = "SELECT * FROM lista_compra, compra, cliente, produto WHERE 
+                        cod_compra IN (SELECT cod_compra FROM compra WHERE data >= '$data_inicio' AND data < '$data_fim') AND
+                        cod_listaCompra = cod_compra AND cod_listaProdutoCompra = cod_produto AND cpf_listaCompraCliente = cpf AND produto_compra_status != 'Aguardando confirmação' AND cod_listaProdutoCompra IN (SELECT cod_produto FROM produto WHERE cnpj_empresa = '$cnpj')";
+                        $result = mysqli_query($conexao, $query) or die(mysql_error());
+                        while($row = mysqli_fetch_array($result)) {
+                            echo '<tr>
+                                <td style="text-align:center">'.$row['cod_compra'].'</td>
+                                <td style="text-align:center">'.date('d/m/Y', strtotime($row['data'])).'</td>
+                                <td style="text-align:center">'.$row['cpf'].'</td>
+                                <td style="text-align:center">'.$row['cod_rastreamento'].'</td>
+                                <td style="text-align:center">'.$row['frete'].'</td>
+                                <td style="text-align:center">'.$row['endereco'].'</td>
+                                <td style="text-align:center">'.$row['cod_produto'].'</td>
+                                <td style="text-align:center">'.$row['qnt_compraProduto'].'</td>
+                                <td style="text-align:center">R$ '.number_format($row['qnt_compraProduto']*$row['preco_unidade'], 2).'</td>
+                                <td style="text-align:center">'.$row['avaliacao'].'</td>
+                                <td style="text-align:center">'.$row['produto_compra_status'].'</td>
+                            </tr>';
+                        }
+
+                        ?>
                     </tbody>
                 </table>
             </div>
