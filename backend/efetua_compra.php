@@ -30,7 +30,22 @@
     $result = mysqli_query($conexao, $query) or die(mysql_error());
 
     while($row = mysqli_fetch_array($result)) {
-        $total += $row['qnt_produtoCarrinho'] * $row['preco_produto'];
+        // checar quantidade máxima de produtos
+        if($row['qnt_produto'] < $row['qnt_produtoCarrinho']){
+            $cod_produto = $row['cod_produto'];
+            $novo = $row['qnt_produto'];
+            $query1 = "UPDATE lista_carrinho SET qnt_produtoCarrinho = '$novo' WHERE cod_listaProduto = '$cod_produto' AND cpf_listacliente = '$cpf'";
+            $result1 = mysqli_query($conexao, $query1) or die(mysql_error());
+        }
+
+        // checar promocao
+        if($row['tem_promocao'] == '1') {
+            $total += $row['qnt_produtoCarrinho'] * ($row['preco_produto']*(100-$row['porc_promocao'])/100);
+        } else {
+            $total += $row['qnt_produtoCarrinho'] * $row['preco_produto'];
+        }
+        
+        // cálculo do frete
         if($total > 100) {
             $frete = 10;
         } else {
@@ -59,15 +74,24 @@
     mysqli_query($conexao, $query) or die(mysql_error());
 
 
-    $query = "SELECT * FROM lista_carrinho";
+    $query = "SELECT * FROM lista_carrinho, produto WHERE cod_listaProduto = cod_produto AND cpf_listacliente = '$cpf'";
     $result = mysqli_query($conexao, $query) or die(mysql_error());
     while($row = mysqli_fetch_array($result)){
         // Pegar do carrinho
         $qnt_compraProduto = $row['qnt_produtoCarrinho'];
         $cod_listaProdutoCompra = $row['cod_listaProduto'];
 
+        
+        // checar promocao
+        if($row['tem_promocao'] == '1') {
+            $preco_un = $row['preco_produto']*(100-$row['porc_promocao'])/100;
+        } else {
+            $preco_un = $row['preco_produto'];
+        }
+        
 
-        $query = "INSERT INTO lista_compra (cod_rastreamento, qnt_compraProduto, cod_listaProdutoCompra, cod_listaCompra, cpf_listaCompraCliente) VALUES ('1', '$qnt_compraProduto', '$cod_listaProdutoCompra', '$cod_compraCartao', '$cpf');";
+        $query = "INSERT INTO lista_compra (qnt_compraProduto, cod_listaProdutoCompra, cod_listaCompra, cpf_listaCompraCliente, produto_compra_status, preco_unidade) VALUES 
+        ('$qnt_compraProduto', '$cod_listaProdutoCompra', '$cod_compraCartao', '$cpf', 'Aguardando confirmação', '$preco_un');";
         mysqli_query($conexao, $query) or die(mysql_error());
 
     }

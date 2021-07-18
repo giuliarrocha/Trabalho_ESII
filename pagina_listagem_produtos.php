@@ -12,6 +12,7 @@
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Text&display=swap" rel="stylesheet">
    <title>Pesquisa</title>
+  <link rel="shortcut icon" href="images/Design.png" >
  </head>
 
  <body>
@@ -22,23 +23,30 @@
   <div class="conteiner">
     <nav class="navbar navbar-expand-md navbar-light mt-1">
       <div class="navbar-collapse collapse w-75 ms-4">
-        <a class="navbar-brand mb-0" style="color: rgba(9, 43, 64, 1);" href="pagina_inicial.html">
+        <a class="navbar-brand mb-0" style="color: rgba(9, 43, 64, 1);" href="pagina_inicial.php">
           <img src="images/Design.png" alt="" width="30" height="32" class="d-inline-block align-text-bottom">
           Home
         </a>
           <ul class="navbar-nav me-auto mt-2">
-            <li class="nav-item">
-              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">Para empresas</a>
+          <li class="nav-item">
+              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="backend/sair.php?sairUser=1">
+              <?php   
+                // Checa sessão
+                session_start();
+                if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") echo 'Para empresas';
+                else echo 'Para clientes';
+              ?>
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">Ofertas</a>
+              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="pagina_listagem_produtos.php?oferta=1">Ofertas</a>
             </li>
           </ul>
       </div>
 
       <div class="mx-auto" style="width: 1000px;">
-        <form class="d-flex mt-2">
-          <input class="form-control form-control-sm me-0" type="search" placeholder="Search" aria-label="Search">
+        <form class="d-flex mt-2" action="pagina_listagem_produtos.php" method="get">
+          <input class="form-control form-control-sm me-0" type="search" placeholder="Pesquisar produtos" name="pesquisar" aria-label="pesquisar">
           <button class="btn btn-outline btn-sm" type="submit">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -50,7 +58,9 @@
       <div class="navbar-collapse collapse w-100">
           <!--Botao Conta-->
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item dropdown me-md-3">
+            <?php if(isset($_SESSION['tipo']) && $_SESSION['tipo'] == "empresa")echo '<li class="nav-item dropstart me-md-3">';
+            else echo '<li class="nav-item dropdown me-md-3">';
+            ?>
               <a class="nav-link dropdown-toggle justify-content-start" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="black" class="bi bi-person-fill " viewBox="0 0 16 16">
                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -67,21 +77,19 @@
                 } else if($_SESSION['tipo'] == "empresa") {
                     // Se for área da empresa:
                     echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
-                    <li><a class="dropdown-item" href="#">Estoque</a></li>
-                    <li><a class="dropdown-item" href="#">Vendas</a></li>
-                    <li><a class="dropdown-item" href="#">Carteira</a></li>
-                    <li><a class="dropdown-item" href="#">Segurança</a></li>
-                    <li><a class="dropdown-item" href="#">Feedbacks</a></li>
-                    <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
+                        <li><a class="dropdown-item" href="informacoes_empresa.php">Informações Gerais</a></li>
+                        <li><a class="dropdown-item" href="controle_estoque.php">Estoque</a></li>
+                        <li><a class="dropdown-item" href="vendas_empresa.php">Vendas</a></li>
+                        <li><a class="dropdown-item" href="historico_empresa.php">Histórico de vendas</a></li>
+                        <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 } else {
                     // Se estiver logado
                     echo '<ul class="dropdown-menu dropdown-menu-sm-start" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Informações Pessoais</a></li>
-                    <li><a class="dropdown-item" href="#">Meus pedidos</a></li>
-                    <li><a class="dropdown-item" href="#">Segurança</a></li>
-                    <li><a class="dropdown-item" href="#">Pagamento</a></li>
+                    <li><a class="dropdown-item" href="informacoes_cliente.php">Informações Pessoais</a></li>
+                    <li><a class="dropdown-item" href="aba_favoritos.php">Meus favoritos</a></li>
+                    <li><a class="dropdown-item" href="aba_carrinho_compras.php">Meu carrinho</a></li>
+                    <li><a class="dropdown-item" href="aba_compras.php">Meus pedidos</a></li>
                     <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 }
@@ -90,7 +98,7 @@
             <!--Botao Carrinho de compras-->
             <?php
                 if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
-                    echo '<a href="carrinho_compras.php">
+                    echo '<a href="aba_carrinho_compras.php"">
                     <button type="button" class="btn btn-outline-secondary position-relative rounded-circle mx-4 me-md-5" style="background-color:';
                     
                     $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
@@ -140,6 +148,10 @@
     <?php
         // Pega número inicial de produtos
         $offset = isset($_GET['offset'])?$_GET['offset']:0;
+        $cod_categoria = '';
+        $cnpj = '';
+        $oferta = '';
+        $pesquisar = '';
 
         // Mostra todos os produtos
         $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
@@ -148,7 +160,8 @@
         }
 
         // Seleciona tipo de consulta
-        if(isset($_GET['oferta'])) {
+        if(isset($_GET['oferta']) && $_GET['oferta'] != '') {
+            $oferta = $_GET['oferta'];
             $query = "SELECT * FROM produto WHERE tem_promocao = 1 LIMIT $offset,16;";
         } else if(isset($_GET['cod_categoria']) && $_GET['cod_categoria'] != '') {
             $cod_categoria = $_GET['cod_categoria'];
@@ -184,9 +197,13 @@
                             <li class="list-group-item" style="height: 100px;">
                                 <h6 class="card-title"><strong>'.$row['nome_produto'].'</strong></h6>
                             </li>
-                            <li class="list-group-item" style="height: 33px;">
-                                <p>R$ '.$row['preco_produto'].'</p>
-                            </li>
+                            <li class="list-group-item" style="height: 33px;">';
+                            if($row['tem_promocao'] == '1') {
+                                echo '<p style="color: green"><b>R$ '.$row['preco_produto']*((100-$row['porc_promocao'])/100).'</b></p>';
+                            } else{
+                                echo '<p>R$ '.$row['preco_produto'].'</p>';
+                            }
+                            echo '</li>
                         </ul>
                     </a>    
                     </div>
@@ -207,7 +224,7 @@
                 
             <?php    
                 // Seleciona tipo de consulta
-                if(isset($_GET['oferta'])) {
+                if(isset($_GET['oferta']) && $_GET['oferta'] != '') {
                     $query = "SELECT COUNT(*) AS qt_produto FROM produto WHERE tem_promocao = 1";
                 } else if(isset($_GET['cod_categoria']) && $_GET['cod_categoria'] != '') {
                     $cod_categoria = $_GET['cod_categoria'];
@@ -247,7 +264,7 @@
                         echo '
                             <!-- Setinha esquerda -->
                             <li class="page-item'.$habilitado.'">
-                            <a class="page-link" href="'.$href.'" aria-disabled="'.$verdadeiro.'" aria-label="Previous">
+                            <a class="page-link" href="'.$href.'&cod_categoria='.$cod_categoria.'&cnpj='.$cnpj.'&pesquisar='.$pesquisar.'&oferta='.$oferta.'" aria-disabled="'.$verdadeiro.'" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                             </li>';
@@ -258,7 +275,7 @@
                         while($qt_blocoTemp--) {
                             $ativo = "";
                             if($offset == ($cont-1)*16) $ativo = " active";
-                            echo '<li class="page-item'.$ativo.'"><a class="page-link" href="pagina_listagem_produtos.php?offset='.(($cont-1)*16).'">'.$cont.'</a></li>';
+                            echo '<li class="page-item'.$ativo.'"><a class="page-link" href="pagina_listagem_produtos.php?offset='.(($cont-1)*16).'&cod_categoria='.$cod_categoria.'&cnpj='.$cnpj.'&pesquisar='.$pesquisar.'&oferta='.$oferta.'">'.$cont.'</a></li>';
                             $cont++;
                         }
                         
@@ -279,7 +296,7 @@
                         echo '
                             <!-- Setinha direita -->
                             <li class="page-item'.$habilitado.'">
-                            <a class="page-link" href="'.$href.'" aria-disabled="'.$verdadeiro.'" aria-label="Previous">
+                            <a class="page-link" href="'.$href.'&cod_categoria='.$cod_categoria.'&cnpj='.$cnpj.'&pesquisar='.$pesquisar.'&oferta='.$oferta.'" aria-disabled="'.$verdadeiro.'" aria-label="Previous">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                             </li>';

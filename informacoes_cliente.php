@@ -127,7 +127,7 @@
             </div>
         </div>
         <div class="col">
-            <h2>Dados da empresa</h2>
+            <h2>Dados do cliente</h2>
             <?php
                 // prepara conexao
                 $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");

@@ -12,10 +12,12 @@
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Text&display=swap" rel="stylesheet">
    <title>Site</title>
+  <link rel="shortcut icon" href="images/Design.png" >
  </head>
 
  <body>
   <script src="js/bootstrap.min.js"></script>
+
 
   <!-- Barra de navegação-->
   <div class="conteiner">
@@ -75,21 +77,19 @@
                 } else if($_SESSION['tipo'] == "empresa") {
                     // Se for área da empresa:
                     echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
-                        <li><a class="dropdown-item" href="#">Estoque</a></li>
-                        <li><a class="dropdown-item" href="#">Vendas</a></li>
-                        <li><a class="dropdown-item" href="#">Carteira</a></li>
-                        <li><a class="dropdown-item" href="#">Segurança</a></li>
-                        <li><a class="dropdown-item" href="#">Feedbacks</a></li>
+                        <li><a class="dropdown-item" href="informacoes_empresa.php">Informações Gerais</a></li>
+                        <li><a class="dropdown-item" href="controle_estoque.php">Estoque</a></li>
+                        <li><a class="dropdown-item" href="vendas_empresa.php">Vendas</a></li>
+                        <li><a class="dropdown-item" href="historico_empresa.php">Histórico de vendas</a></li>
                         <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 } else {
                     // Se estiver logado
                     echo '<ul class="dropdown-menu dropdown-menu-sm-start" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Informações Pessoais</a></li>
-                    <li><a class="dropdown-item" href="#">Meus pedidos</a></li>
-                    <li><a class="dropdown-item" href="#">Segurança</a></li>
-                    <li><a class="dropdown-item" href="#">Pagamento</a></li>
+                    <li><a class="dropdown-item" href="informacoes_cliente.php">Informações Pessoais</a></li>
+                    <li><a class="dropdown-item" href="aba_favoritos.php">Meus favoritos</a></li>
+                    <li><a class="dropdown-item" href="aba_carrinho_compras.php">Meu carrinho</a></li>
+                    <li><a class="dropdown-item" href="aba_compras.php">Meus pedidos</a></li>
                     <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 }
@@ -98,7 +98,7 @@
             <!--Botao Carrinho de compras, somente para cliente ou quando ninguém logado -->
             <?php
                 if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
-                    echo '<a href="carrinho_compras.php">
+                    echo '<a href="aba_carrinho_compras.php"">
                     <button type="button" class="btn btn-outline-secondary position-relative rounded-circle mx-4 me-md-5" style="background-color:';
                     
                     $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
@@ -175,7 +175,7 @@
     <div class="container">
       <!--Linha 2: Texto "Categorias"-->
       <div class="row mt-5">
-        <h4>CATEGORIAS</h4>
+        <h4 style="margin-left:10px">CATEGORIAS</h4>
       </div>
 
       <!--Linha 3: Primeira linha de botões"-->

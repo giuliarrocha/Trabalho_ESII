@@ -1,3 +1,15 @@
+<?php
+
+    // inicia sessao
+    session_start();
+    if (isset($_SESSION['tipo'])) {
+        header('Location: pagina_inicial.php');
+        exit;
+        return;
+    }
+?>
+
+
 <!doctype html>
 <html lang="en">
 
