@@ -34,6 +34,8 @@
     color: rgb(83, 83, 83);
 }
 
+
+
 html,
 body {
     height: 100%;
@@ -50,3 +52,12 @@ body {
 
 
 /* TEEEEEEEEEEEEEEEEEESTE */
+
+.tamanho{
+    width: 7em;
+}
+
+.centraliza td{
+    vertical-align: middle;
+    justify-content: center;
+}
