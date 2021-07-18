@@ -20,7 +20,7 @@
             $_SESSION["tipo"] = "cliente";
             $_SESSION["nome"] = $nome;
             $_SESSION["email"] = $email;
-            $_SESSION["cpf"] = $cpf;
+            $_SESSION["cpf"] = $row['cpf'];
 
             $conexao->close();
             header('Location: ../pagina_inicial.php');

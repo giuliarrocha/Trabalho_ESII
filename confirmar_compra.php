@@ -1,4 +1,12 @@
-
+<?php
+    // inicia sessao
+    session_start();
+    if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] != "cliente") {
+        header('Location: pagina_inicial.php');
+        exit;
+        return;
+    }
+?>
 <!doctype html>
 <html lang="en">
 
@@ -8,7 +16,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
-<link rel="stylesheet" href="css/style.css" />
+<style>
+    .tamanho{
+        width: 7em;
+    }
+
+    .centraliza td{
+        vertical-align: middle;
+        justify-content: center;
+    }
+</style>
 <link rel="stylesheet" href="css/carrinho.css" />
 <title>Confirmar compra</title>
 </head>
@@ -98,7 +115,6 @@
 </div>
 
 <!--Escrita do confirmar compra-->
-
 <div class="container" style="margin-top: 70px; margin-left: 100px; margin-right: 100px;">
     <div class="row">
         <div class="col"> <h3>Confirmar compra(s)</h3> </div>
@@ -109,25 +125,29 @@
                     <th scope="col">PRODUTO</th>
                     <th scope="col">Nome do produto</th>
                     <th scope="col">Preço</th>
-                    <th scope="col">Quantidade</th>   
+                    <th scope="col" style="text-align: center">Quantidade</th>   
                     <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row"><img src="images/exemplo_imagem.png" class="tamanho"></th>
-                    <td> Nome do produto </td>
-                    <td> R$20,00</td>
-                    <td> 1</td>
-                    <td> <button type="button" class="btn btn-primary">Confirmar compra</button> </td>
-                  </tr>
-                  <tr>
-                    <th scope="row"><img src="images/exemplo_imagem.png" class="tamanho"></th>
-                    <td> Nome do produto </td>
-                    <td> R$15,00</td>
-                    <td> 2 </td>
-                    <td> <button type="button" class="btn btn-primary">Confirmar compra</button> </td>
-                  </tr>
+                <?php
+                    $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+                    if($conexao) {
+                        echo mysqli_connect_error();
+                    }
+                    $cpf = $_SESSION['cpf'];
+                    $query = "SELECT * FROM lista_compra, produto WHERE cod_listaProdutoCompra =  cod_produto AND produto_compra_status = 'Finalizada' AND cpf_listaCompraCliente = '$cpf'";
+                    $result = mysqli_query($conexao, $query) or die(mysql_error());
+                    while($row = mysqli_fetch_array($result)) {
+                        echo '<tr>
+                          <th scope="row"><img src="'.$row['imagem'].'" class="tamanho"></th>
+                          <td> '.$row['nome_produto'].' </td>
+                          <td>R$ '.number_format($row['preco_unidade'],2).' </td>
+                          <td style="text-align: center"> '.$row['qnt_compraProduto'].'</td>
+                          <td> <a href="backend/confirmar_compra.php?cod_lista='.$row['cod_lista'].'"><button type="button" class="btn btn-outline-secondary">Confirmar compra</button></a> </td>
+                        </tr>';
+                    }
+                    ?>
                 </tbody>
               </table>
         </div>
