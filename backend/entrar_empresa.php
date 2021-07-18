@@ -18,7 +18,7 @@
             // inicia sessao
             session_start();
             $_SESSION["tipo"] = "empresa";
-            $_SESSION["cnpj"] = $cnpj;
+            $_SESSION["cnpj"] = $row['cnpj'];
             $_SESSION["email"] = $email;
 
             $conexao->close();
