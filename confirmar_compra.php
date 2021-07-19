@@ -104,6 +104,7 @@
                     <li><a class="dropdown-item" href="aba_favoritos.php">Meus favoritos</a></li>
                     <li><a class="dropdown-item" href="aba_carrinho_compras.php">Meu carrinho</a></li>
                     <li><a class="dropdown-item" href="aba_compras.php">Meus pedidos</a></li>
+                    <li><a class="dropdown-item" href="confirmar_compra.php">Confirmar compra</a></li>
                     <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 }
@@ -167,9 +168,11 @@
                   <tr>
                     <th scope="col">PRODUTO</th>
                     <th scope="col">Nome do produto</th>
-                    <th scope="col">Preço</th>
-                    <th scope="col" style="text-align: center">Quantidade</th>   
-                    <th scope="col"></th>
+                    <th scope="col">Preço uniário</th>
+                    <th scope="col" style="text-align: center">Quantidade</th>
+                    <th scope="col" style="text-align: center">Código de rastreio</th>
+                    <th scope="col">Confirmar</th>
+                    <th scope="col">Avaliar</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -179,16 +182,26 @@
                         echo mysqli_connect_error();
                     }
                     $cpf = $_SESSION['cpf'];
-                    $query = "SELECT * FROM lista_compra, produto WHERE cod_listaProdutoCompra =  cod_produto AND produto_compra_status = 'Finalizada' AND cpf_listaCompraCliente = '$cpf'";
+                    $query = "SELECT * FROM lista_compra, produto WHERE cod_listaProdutoCompra =  cod_produto AND (produto_compra_status = 'Finalizada' OR produto_compra_status = 'Em trânsito' OR produto_compra_status = 'Recebida') AND cpf_listaCompraCliente = '$cpf'";
                     $result = mysqli_query($conexao, $query) or die(mysql_error());
                     while($row = mysqli_fetch_array($result)) {
                         echo '<tr>
                           <th scope="row"><img src="'.$row['imagem'].'" class="tamanho"></th>
-                          <td> '.$row['nome_produto'].' </td>
+                          <td><a style="text-decoration: none" href="pagina_produto_descricao.php?cod_produto='.$row['cod_produto'].'">'.$row['nome_produto'].'</a></td>
                           <td>R$ '.number_format($row['preco_unidade'],2).' </td>
                           <td style="text-align: center"> '.$row['qnt_compraProduto'].'</td>
-                          <td> <a href="backend/confirmar_compra.php?cod_lista='.$row['cod_lista'].'"><button type="button" class="btn btn-outline-secondary">Confirmar compra</button></a> </td>
-                        </tr>';
+                          <td style="text-align: center"> '.$row['cod_rastreamento'].'</td>';
+                          if($row['produto_compra_status'] == 'Finalizada' || $row['produto_compra_status'] == 'Em trânsito') {
+                            echo '<td> <a href="backend/confirmar_compra.php?cod_lista='.$row['cod_lista'].'"><button type="button" class="btn btn-outline-secondary">Confirmar compra</button></a> </td>';
+                          } else {
+                            echo '<td> </td>';
+                          }
+                          if($row['produto_compra_status'] == 'Recebida') {
+                            echo '<td> <a href="pagina_produto_fazer_review.php?cod_produto='.$row['cod_produto'].'"><button type="button" class="btn btn-outline-secondary">Avaliar</button></a> </td>';
+                          } else {
+                            echo '<td> </td>';
+                          }
+                        echo '</tr>';
                     }
                     ?>
                 </tbody>

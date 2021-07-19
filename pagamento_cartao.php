@@ -98,6 +98,7 @@
                     <li><a class="dropdown-item" href="aba_favoritos.php">Meus favoritos</a></li>
                     <li><a class="dropdown-item" href="aba_carrinho_compras.php">Meu carrinho</a></li>
                     <li><a class="dropdown-item" href="aba_compras.php">Meus pedidos</a></li>
+                    <li><a class="dropdown-item" href="confirmar_compra.php">Confirmar compra</a></li>
                     <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 }

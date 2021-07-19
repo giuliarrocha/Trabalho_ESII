@@ -4,9 +4,8 @@
 
     // inicia sessao
     session_start();
-    
-    $cod_produto = isset($_GET['cod_produto'])?$_GET['cod_produto']:0;
     $cpf = $_SESSION['cpf'];
+    $cod_produto = isset($_GET['cod_produto'])?$_GET['cod_produto']:0;
 
     $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
     if($conexao) {
@@ -15,9 +14,20 @@
     // Mostra dados do produto selecionado
     $query = "SELECT * FROM produto, empresa WHERE empresa.cnpj = produto.cnpj_empresa AND cod_produto = '$cod_produto'";
     $result = mysqli_query($conexao, $query) or die(mysql_error());
-    
     $row = mysqli_fetch_array($result);
-        ?>
+    
+    // Mostra opção de rating caso tenha feito compra
+    $query = "SELECT * FROM produto, lista_compra WHERE (produto_compra_status = 'Finalizada' OR produto_compra_status = 'Recebida') AND cod_listaProdutoCompra = cod_produto AND cod_produto = '$cod_produto' AND cpf_listaCompraCliente = '$cpf'";
+    $result2 = mysqli_query($conexao, $query) or die(mysql_error());
+    $row2 = mysqli_fetch_array($result2);
+
+    if(!$row2) {
+        header('Location: pagina_produto_descricao.php?cod_produto='.$cod_produto);
+        exit;
+        return;
+    }
+
+    ?>
  <head>
    <!-- Required meta tags -->
    <meta charset="utf-8">
@@ -30,6 +40,47 @@
  </head>
 
  <body>
+ 
+<style>
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center
+}
+
+.rating>input {
+    display: none
+}
+
+.rating>label {
+    position: relative;
+    width: 1em;
+    font-size: 3vw;
+    color: #FFD600;
+    cursor: pointer
+}
+
+.rating>label::before {
+    content: "\2605";
+    position: absolute;
+    opacity: 0
+}
+
+.rating>label:hover:before,
+.rating>label:hover~label:before {
+    opacity: 1 !important
+}
+
+.rating>input:checked~label:before {
+    opacity: 1
+}
+
+.rating:hover>input:checked~label:before {
+    opacity: 1
+}
+</style>
+
+
    <!-- Bootstrap JavaScript -->
    <script src="js/bootstrap.min.js"></script>
 
@@ -159,131 +210,46 @@
   <div class="container" style="margin-top: 70px; margin-left: 100px; margin-right: 100px;">
     <div class="row">
         <?php
-
             if($row) {
                 echo '<div class="col">
                 <h2>'.$row['nome_produto'].'</h2>
                 <p class="text-body">'.$row['nome'].'</p>
                 <ul class="nav nav-tabs" style="margin-top: 30px;">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="pagina_produto_descricao.php?cod_produto='.$row['cod_produto'].'">Descrição</a>
-                  </li>';
-                
-                  // Mostra opção de rating caso tenha feito compra
-                  $query = "SELECT * FROM produto, lista_compra WHERE (produto_compra_status = 'Finalizada' OR produto_compra_status = 'Recebida') AND cod_listaProdutoCompra = cod_produto AND cod_produto = '$cod_produto' AND cpf_listaCompraCliente = '$cpf'";
-                  $result22 = mysqli_query($conexao, $query) or die(mysql_error());
-                  $row22 = mysqli_fetch_array($result22);
-                  if($row22) {
-                      echo '<li class="nav-item">
-                          <a class="nav-link" href="pagina_produto_fazer_review.php?cod_produto='.$row['cod_produto'].'">Fazer review</a>
-                      </li>';
-                  }
-                  echo '<li class="nav-item">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="pagina_produto_descricao.php?cod_produto='.$row['cod_produto'].'">Descrição</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="pagina_produto_fazer_review.php?cod_produto='.$row['cod_produto'].'">Fazer review</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="pagina_produto_review.php?cod_produto='.$row['cod_produto'].'">Últimos reviews</a>
-                  </li>
-                </ul>
-                <p style="margin-top: 50px;">
-                  '.$row['descricao_produto'].'
-                </p>
-                <p><strong>Estoque: </strong> '.$row['qnt_produto'].'</p>';
-                if($row['tem_promocao'] == '1') {
-                    echo '<p><strong>Sem desconto: </strong>R$ '.number_format($row['preco_produto'],2).'</p>';
-                    echo '
-                <div class="row" style="margin-top: 50px;">
-                    <div class="col">
-                        <h2 style="margin-left: 20px;"><strong>R$ '.number_format($row['preco_produto']*((100-$row['porc_promocao'])/100), 2).'</strong></h2>
-                    </div>
-                    <div class="col">';
-                    
-                } else {
-                    echo '
-                <div class="row" style="margin-top: 50px;">
-                    <div class="col">
-                        <h2 style="margin-left: 20px;"><strong>R$ '.number_format($row['preco_produto'],2).'</strong></h2>
-                    </div>
-                    <div class="col">';
-                }
-                
-
-                if(isset($_SESSION['tipo']) && $_SESSION['tipo'] == "cliente") {
-                    echo '
-            <form action="backend/add_carrinho.php" method="post">
-                <div class="col" style="margin-bottom: 10px; text-align:center">
-                <a href="#"><button type="button" onclick="decrementar()" class="btn btn-sm btn-sm btn-outline-dark">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
-                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
-                    </svg></button></a>
-                        <input id="mudarNumero" name="mudarNumero" type="text" readonly maxlength="4" size="4" value="1" style="border: 0; text-align: center">
-                                <a href="#" class="border"><button type="button" onclick="incrementar()" class="btn btn-sm btn-outline-success">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                    <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"></path>
-                    </svg></button></a> 
-                        </div>
-                    <input type="text" value="'.$row['cod_produto'].'" name="cod_produto" class="d-none"><button type="submit" name="submit" class="btn btn-outline-secondary w-75" style="margin-left: 30px;">Adicionar ao carrinho</button></form>
-                  ';
-                }
-                  
-                echo '</div></div>
-                
-                <div class="row" style="margin-top: 0px; text-align:right">
+                </li>
+                </ul>';
+            }
+            ?>
+            <p style="margin-top: 50px;">
+              Diga-nos o que achou da compra <?php echo $row2['cod_listaCompra']; ?>!
+            </p>
+            <form action="backend/add_review.php" method="post">
+                <input type="text" class="form-control" name="comentario" placeholder="Deixe seu comentário" required maxlength="38">
+                <input type="text" class="form-control d-none" name="cod_lista" value="<?php echo $row2['cod_lista']; ?>">
+                <input type="text" class="form-control d-none" name="cod_compra" value="<?php echo $row2['cod_listaCompra']; ?>">
+                <input type="text" class="form-control d-none" name="cod_produto" value="<?php echo $row2['cod_listaProdutoCompra']; ?>">
+                <div class="rating">
+                <input type="radio" name="rating" value="5" checked id="5"><label for="5">☆</label>
+                <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
+                <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
                 </div>
-                
-                <script>
-                var i = 1;
-                function incrementar() {
-                    document.getElementById(\'mudarNumero\').value = ++i;
-                }
-                function decrementar() {
-                    if(i > 1)
-                        document.getElementById(\'mudarNumero\').value = --i;
-                }
-                </script>';
-
-            if(isset($_SESSION['tipo']) && $_SESSION['tipo'] == "empresa") {
-                echo '</div>';
-            }
-            // Não logado
-            if(!isset($_SESSION['tipo'])) {
-                /*echo '<a href="login_usuario.php" class="link-secondary" style="margin-left: 20px; text-decoration:none;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                            </svg> Adicionar à lista de desejos
-                        </a>
-                    </div> ';*/
-            } else if ($_SESSION['tipo'] == "cliente") {
-                $cpf = $_SESSION['cpf'];
-                $query1 = "SELECT * FROM produto, lista_favorito WHERE lista_favorito.cpf_favCliente = '$cpf' AND lista_favorito.cod_favProduto = cod_produto AND cod_produto = '$cod_produto'";
-                $result1 = mysqli_query($conexao, $query1) or die(mysql_error());
-
-                // verificar se já está na lista de favoritos
-                if($row1 = mysqli_fetch_array($result1)) {
-                    // Já add produto à lista de favoritos
-                    echo '<a href="backend/remover_lista_fav.php?cod_produto='.$cod_produto.'" class="link-secondary" style="margin-left: 0px; text-decoration:none;">
-                            <svg style="margin-bottom:3px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" href="#" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                            </svg> Remover da lista de desejos
-                        </a>
-                    </div> ';
-                } else {
-                    // Não adicionado aos favoritos ainda
-                    echo '
-                    <a href="backend/add_lista_fav.php?cod_produto='.$cod_produto.'" class="link-secondary" style="margin-left: 0px; text-decoration:none;text-align:right">
-                            <svg style="margin-bottom:3px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                            </svg> Adicionar à lista de desejos</a>
-                    </div>';
-                }
-                
-            }
-            // Se for empresa não mostra  
-            
-            echo '<div class="col">
-              <img src="'.$row['imagem'].'" class="justify-content-center" style="margin-left: 40px;" height="400" width="380">
-            </div>';
-            }
-
-        ?>
-               
+            <button type="submit" name="submit" class="btn btn-outline-secondary espaco30 w-100" style="margin-bottom: 0px;">Enviar</button>
+            </form>
+            <div class="row" style="margin-top: 60px;">
+            </div>
+        </div> 
+        <div class="col">
+          <img src="<?php echo $row2['imagem']; ?>" class="justify-content-center" style="margin-left: 40px;" height="400" width="380">
+        </div> 
     </div>
   </div>
    <!--Rodapé-->

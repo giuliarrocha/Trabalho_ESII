@@ -3,7 +3,7 @@
     // inicia sessao
     session_start();
     if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "empresa") {
-        header('Location: ../pagina_inicial.php');
+        header('Location: pagina_inicial.php');
         exit;
         return;
     }
@@ -97,6 +97,7 @@
                     <li><a class="dropdown-item" href="aba_favoritos.php">Meus favoritos</a></li>
                     <li><a class="dropdown-item" href="aba_carrinho_compras.php">Meu carrinho</a></li>
                     <li><a class="dropdown-item" href="aba_compras.php">Meus pedidos</a></li>
+                    <li><a class="dropdown-item" href="confirmar_compra.php">Confirmar compra</a></li>
                     <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 }
@@ -175,8 +176,8 @@
                     </div>
                     <div style="text-align:center" class="col">Empresa</div>
                     <div style="text-align:center" class="col">Código de compra</div>
-                    <div style="text-align:right" class="col">Preco total
-                    </div>
+                    <div style="text-align:center" class="col">Quantidade</div>
+                    <div style="text-align:right" class="col">Preço total</div>
                 </div>
               </div>
         
@@ -189,7 +190,7 @@
             }
             // Mostra dados dos produtos
             $cpf = $_SESSION['cpf'];
-            $query = "SELECT * FROM produto, lista_compra, compra, empresa WHERE cnpj = cnpj_empresa AND cod_listaCompra = cod_compra AND cod_listaProdutoCompra = cod_produto AND cpf_listaCompraCliente = '$cpf'";
+            $query = "SELECT * FROM produto, lista_compra, compra, empresa WHERE cnpj = cnpj_empresa AND cod_listaCompra = cod_compra AND cod_listaProdutoCompra = cod_produto AND cpf_listaCompraCliente = '$cpf' ORDER BY cod_compra";
             $result = mysqli_query($conexao, $query) or die(mysql_error());
             
             while($row = mysqli_fetch_array($result)){
@@ -197,11 +198,12 @@
                 <div class="row main align-items-center">
                     <div class="col-1" style="margin: 10px"><img width="500" height="500" class="img-fluid" src="'.$row['imagem'].'"></div>
                     <div class="col">
-                        <div class="row text-muted">'.$row['nome_produto'].'</div>
+                        <a style="text-decoration: none" href="pagina_produto_descricao.php?cod_produto='.$row['cod_produto'].'"><div class="row text-muted">'.$row['nome_produto'].'</div></a>
                     </div>
                     <div style="text-align:center" class="col">'.$row['nome'].'</div>
                     <div style="text-align:center" class="col">'.$row['cod_compra'].'</div>
-                    <div style="text-align:right" class="col">R&dollar; '.number_format($row['preco_produto'], 2).'
+                    <div style="text-align:center" class="col">'.$row['qnt_compraProduto'].'</div>
+                    <div style="text-align:right" class="col">R&dollar; '.number_format($row['qnt_compraProduto'] * $row['preco_unidade'], 2).'
                         
                     </div>
                 </div>

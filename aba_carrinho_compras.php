@@ -3,7 +3,7 @@
     // inicia sessao
     session_start();
     if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "empresa") {
-        header('Location: ../pagina_inicial.php');
+        header('Location: pagina_inicial.php');
         exit;
         return;
     }
@@ -97,6 +97,7 @@
                     <li><a class="dropdown-item" href="aba_favoritos.php">Meus favoritos</a></li>
                     <li><a class="dropdown-item" href="aba_carrinho_compras.php">Meu carrinho</a></li>
                     <li><a class="dropdown-item" href="aba_compras.php">Meus pedidos</a></li>
+                    <li><a class="dropdown-item" href="confirmar_compra.php">Confirmar compra</a></li>
                     <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 }
@@ -201,7 +202,7 @@
               </div>
               <div style="text-align:right" class="col">R&dollar; ';
               if($row['tem_promocao'] == '1') {
-                    echo number_format($row['qnt_produtoCarrinho']*($row['qnt_produtoCarrinho']*$row['preco_produto']*((100-$row['porc_promocao'])/100)), 2);
+                    echo number_format($row['qnt_produtoCarrinho']*$row['preco_produto']*((100-$row['porc_promocao'])/100), 2);
                 }else{
                     echo number_format($row['qnt_produtoCarrinho']*$row['preco_produto'], 2);
                 }
@@ -213,7 +214,7 @@
                 </div>
               </div>';
                 if($row['tem_promocao'] == '1') {
-                    $total += $row['qnt_produtoCarrinho']*($row['qnt_produtoCarrinho']*$row['preco_produto']*((100-$row['porc_promocao'])/100));
+                    $total += $row['qnt_produtoCarrinho']*$row['preco_produto']*((100-$row['porc_promocao'])/100);
                 }else{
                     $total += $row['qnt_produtoCarrinho']*$row['preco_produto'];
                 }

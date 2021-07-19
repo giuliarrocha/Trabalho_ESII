@@ -1,6 +1,23 @@
 <!doctype html>
 <html lang="en">
+<?php
 
+    // inicia sessao
+    session_start();
+    
+    $cod_produto = isset($_GET['cod_produto'])?$_GET['cod_produto']:0;
+    $cpf = $_SESSION['cpf'];
+
+    $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+    if($conexao) {
+        echo mysqli_connect_error();
+    }
+    // Mostra dados do produto selecionado
+    $query = "SELECT * FROM produto, empresa WHERE empresa.cnpj = produto.cnpj_empresa AND cod_produto = '$cod_produto'";
+    $result = mysqli_query($conexao, $query) or die(mysql_error());
+    
+    $row = mysqli_fetch_array($result);
+        ?>
  <head>
    <!-- Required meta tags -->
    <meta charset="utf-8">
@@ -8,7 +25,8 @@
    <!-- Bootstrap CSS -->
    <link rel="stylesheet" href="css/bootstrap.min.css">
    <link rel="stylesheet" href="css/style.css" />
-   <title>Produto X (Em construção)</title>
+   <title><?php echo $row['nome_produto']; ?></title>
+  <link rel="shortcut icon" href="images/Design.png" >
  </head>
 
  <body>
@@ -19,23 +37,28 @@
   <div class="container-fluid">
     <nav class="navbar navbar-expand-md navbar-light mt-1">
       <div class="navbar-collapse collapse w-75 ms-4">
-        <a class="navbar-brand mb-0" style="color: rgba(9, 43, 64, 1);" href="pagina_inicial.html">
+        <a class="navbar-brand mb-0" style="color: rgba(9, 43, 64, 1);" href="pagina_inicial.php">
           <img src="images/Design.png" alt="" width="30" height="32" class="d-inline-block align-text-bottom">
           Home
         </a>
           <ul class="navbar-nav me-auto mt-2">
-            <li class="nav-item">
-              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">Para empresas</a>
+          <li class="nav-item">
+              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="backend/sair.php?sairUser=1">
+              <?php   
+                if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") echo 'Para empresas';
+                else echo 'Para clientes';
+              ?>
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="#">Ofertas</a>
+              <a class="nav-link" style="color: rgba(9, 43, 64, 1);" href="pagina_listagem_produtos.php?oferta=1">Ofertas</a>
             </li>
           </ul>
       </div>
 
       <div class="mx-auto" style="width: 1000px;">
-        <form class="d-flex mt-2">
-          <input class="form-control form-control-sm me-0" type="search" placeholder="Search" aria-label="Search">
+        <form class="d-flex mt-2" action="pagina_listagem_produtos.php" method="get">
+          <input class="form-control form-control-sm me-0" type="search" placeholder="Pesquisar produtos" name="pesquisar" aria-label="pesquisar">
           <button class="btn btn-outline btn-sm" type="submit">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -47,49 +70,87 @@
       <div class="navbar-collapse collapse w-100">
           <!--Botao Conta-->
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item dropdown me-md-3">
+            <?php if(isset($_SESSION['tipo']) && $_SESSION['tipo'] == "empresa")echo '<li class="nav-item dropstart me-md-3">';
+            else echo '<li class="nav-item dropdown me-md-3">';
+            ?>
               <a class="nav-link dropdown-toggle justify-content-start" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="black" class="bi bi-person-fill " viewBox="0 0 16 16">
                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                 </svg>
               </a>
-              <!--Se não estiver logado:-->
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="login_usuario.html">Entrar</a></li>
-                <li><a class="dropdown-item" href="login_usuario.html">Cadastrar-se</a></li>
-              </ul>
-              
-              <!--Se for área da empresa:
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Informações Gerais</a></li>
-                <li><a class="dropdown-item" href="#">Estoque</a></li>
-                <li><a class="dropdown-item" href="#">Vendas</a></li>
-                <li><a class="dropdown-item" href="#">Carteira</a></li>
-                <li><a class="dropdown-item" href="#">Segurança</a></li>
-                <li><a class="dropdown-item" href="#">Feedbacks</a></li>
-              </ul>
-              -->
-              <!--Se estiver logado
-              <ul class="dropdown-menu dropdown-menu-sm-start" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Informações Pessoais</a></li>
-                <li><a class="dropdown-item" href="#">Meus pedidos</a></li>
-                <li><a class="dropdown-item" href="#">Segurança</a></li>
-                <li><a class="dropdown-item" href="#">Pagamento</a></li>
-              </ul>
-              -->
+              <?php
+                // Checa sessão
+                if (!isset($_SESSION['tipo'])) {
+                    // Se não estiver logado:
+                    echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="login_usuario.php">Entrar</a></li>
+                    <li><a class="dropdown-item" href="login_usuario.php">Cadastrar-se</a></li>
+                  </ul>';
+                } else if($_SESSION['tipo'] == "empresa") {
+                    // Se for área da empresa:
+                    echo '<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="informacoes_empresa.php">Informações Gerais</a></li>
+                        <li><a class="dropdown-item" href="controle_estoque.php">Estoque</a></li>
+                        <li><a class="dropdown-item" href="vendas_empresa.php">Vendas</a></li>
+                        <li><a class="dropdown-item" href="historico_empresa.php">Histórico de vendas</a></li>
+                        <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
+                  </ul>';
+                } else {
+                    // Se estiver logado
+                    echo '<ul class="dropdown-menu dropdown-menu-sm-start" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="informacoes_cliente.php">Informações Pessoais</a></li>
+                    <li><a class="dropdown-item" href="aba_favoritos.php">Meus favoritos</a></li>
+                    <li><a class="dropdown-item" href="aba_carrinho_compras.php">Meu carrinho</a></li>
+                    <li><a class="dropdown-item" href="aba_compras.php">Meus pedidos</a></li>
+                    <li><a class="dropdown-item" href="confirmar_compra.php">Confirmar compra</a></li>
+                    <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
+                  </ul>';
+                }
+              ?>
             </li>
             <!--Botao Carrinho de compras-->
-            <a href="carrinho_compras.html">
-              <button type="button" class="btn btn-outline-secondary position-relative rounded-circle mx-4 me-md-5" style="background-color: rgba(242, 193, 174, 1);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-cart" viewBox="0 0 16 16">
-                  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                </svg>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  2
-                  <span class="visually-hidden">unread messages</span>
-                </span>
-              </button>
-            </a>
+            <?php
+                if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] == "cliente") {
+                    echo '<a href="aba_carrinho_compras.php"">
+                    <button type="button" class="btn btn-outline-secondary position-relative rounded-circle mx-4 me-md-5" style="background-color:';
+                    
+                    $conexao = mysqli_connect("localhost","root","", "loja") or die("Erro");
+                    if($conexao) {
+                        echo mysqli_connect_error();
+                    }
+                    // Mostra todas as categorias
+                    $cpf = isset($_SESSION['cpf'])?$_SESSION['cpf']:"";
+                    $query7 = "SELECT COUNT(*) AS soma FROM lista_carrinho, cliente WHERE cpf_listacliente = cpf AND cpf = '$cpf' GROUP BY cpf";
+                    $result7 = mysqli_query($conexao, $query7) or die(mysql_error());
+                    
+                    if($row7 = mysqli_fetch_array($result7)) {
+                        echo '
+                    rgba(242, 193, 174, 1);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-cart" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        '.$row7['soma'].'
+                        <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </button>
+                    </a>';
+                    } else {
+                        echo '
+                        rgba(242, 193, 174, 1);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-cart" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        0
+                        <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </button>
+                    </a>';
+                    }
+                    
+                }
+            ?>
           </ul>
       </div>
     </nav>
@@ -97,69 +158,81 @@
   
   <div class="container" style="margin-top: 70px; margin-left: 100px; margin-right: 100px;">
     <div class="row">
-        <div class="col">
-            <h2>Jaqueta Marrom</h2>
-            <p class="text-body">Roupa's Store</p>
-            <ul class="nav nav-tabs" style="margin-top: 30px;">
+        <?php
+            if($row) {
+                echo '<div class="col">
+                <h2>'.$row['nome_produto'].'</h2>
+                <p class="text-body">'.$row['nome'].'</p>
+                <ul class="nav nav-tabs" style="margin-top: 30px;">
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="pagina_produto_descricao.html">Descrição</a>
+                    <a class="nav-link" aria-current="page" href="pagina_produto_descricao.php?cod_produto='.$row['cod_produto'].'">Descrição</a>
+                </li>';
+                
+                // Mostra opção de rating caso tenha feito compra
+                $query = "SELECT * FROM produto, lista_compra WHERE (produto_compra_status = 'Finalizada' OR produto_compra_status = 'Recebida') AND cod_listaProdutoCompra = cod_produto AND cod_produto = '$cod_produto' AND cpf_listaCompraCliente = '$cpf'";
+                $result22 = mysqli_query($conexao, $query) or die(mysql_error());
+                $row22 = mysqli_fetch_array($result22);
+                if($row22) {
+                    echo '<li class="nav-item">
+                        <a class="nav-link" href="pagina_produto_fazer_review.php?cod_produto='.$row['cod_produto'].'">Fazer review</a>
+                    </li>';
+                }
+                echo '<li class="nav-item">
+                    <a class="nav-link active" href="pagina_produto_review.php?cod_produto='.$row['cod_produto'].'">Últimos reviews</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="pagina_produto_detalhes.html">Detalhes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Reviews</a>
-                </li>
-            </ul>
+                </ul>';
+            }
+        ?>
+            <!-- só dois reviews -->
+            <?php
+            $query = "SELECT * FROM produto, lista_compra, cliente WHERE cod_listaProdutoCompra = cod_produto AND produto_compra_status = 'Avaliada' AND cpf_listaCompraCliente = cpf AND cod_produto = '$cod_produto' ORDER BY cod_lista DESC";
+            $result2 = mysqli_query($conexao, $query) or die(mysql_error());
 
-            <div class="card" style="margin-top: 40px; width: 500px; height: 150px;">
+            if($row2 = mysqli_fetch_array($result2)){
+                
+                echo '
+                <p style="font-size: 15px;margin-top:30px"><strong>Avaliação geral: '.number_format($row2['avaliacao'],1).'
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                        </svg>
+                </strong></p>  ';
+                echo '<div class="card" style="margin-top: 40px; width: 500px; height: 150px;">
+                    <div class="card-header">
+                    '.$row2['nome'].'
+                    </div>
+                    <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p style="font-size: 15px;"><strong>Avaliação: '.$row2['produto_compra_avaliacao'].' 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                            </svg>
+                        </strong></p>  
+                        <p style="font-size: 15px;">'.$row2['comentario'].'</p>
+                    </blockquote>
+                    </div>
+                </div>';
+            }
+                
+              if($row2 = mysqli_fetch_array($result2))
+            echo '<div class="card" style="margin-top: 40px; width: 500px; height: 150px;">
                 <div class="card-header">
-                  USUARIO X
+                  '.$row2['nome'].'
                 </div>
                 <div class="card-body">
                   <blockquote class="blockquote mb-0">
-                    <p style="font-size: 15px;"><strong>Avaliação: 4 
+                    <p style="font-size: 15px;"><strong>Avaliação: '.$row2['produto_compra_avaliacao'].' 
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
                           </svg>
                     </strong></p>  
-                    <p style="font-size: 15px;">A well-known quote, contained in a blockquote element.</p>
+                    <p style="font-size: 15px;">'.$row2['comentario'].'</p>
                   </blockquote>
                 </div>
-              </div>
-
-              <div class="card" style="margin-top: 40px; width: 500px; height: 150px;">
-                <div class="card-header">
-                  USUARIO Y
-                </div>
-                <div class="card-body">
-                  <blockquote class="blockquote mb-0">
-                    <p style="font-size: 15px;"><strong>Avaliação: 5 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-                          </svg>
-                    </strong></p>  
-                    <p style="font-size: 15px;">A well-known quote, contained in a blockquote element.</p>
-                  </blockquote>
-                </div>
-              </div>
-
-            <div class="row" style="margin-top: 50px;">
-              <div class="col">
-                <h2 style="margin-left: 20px;"><strong>R$ 58,00</strong></h2>
-              </div>
-              <div class="col">
-                <button type="button" class="btn btn-outline-secondary w-75" style="margin-left: 30px;">Comprar</button>
-              </div>
-            </div>
-            <a href="#" class="link-secondary" style="margin-left: 20px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" href="#" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-              </svg> Adicionar à lista de desejos
-            </a>
+              </div>';
+            ?>
         </div> 
         <div class="col">
-          <img src="images/jaqueta.jpg" class="justify-content-center" style="margin-left: 40px;" height="400" width="380">
+          <img src="<?php echo $row['imagem']; ?>" class="justify-content-center" style="margin-left: 40px;" height="400" width="380">
         </div> 
     </div>
   </div>

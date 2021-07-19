@@ -29,7 +29,7 @@
         
     }
 
-    header('Location: ../login_usuario.php');
+    header('Location: ../login_empresa.php');
     exit;
     return;
 ?>

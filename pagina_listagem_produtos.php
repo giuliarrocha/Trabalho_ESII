@@ -90,6 +90,7 @@
                     <li><a class="dropdown-item" href="aba_favoritos.php">Meus favoritos</a></li>
                     <li><a class="dropdown-item" href="aba_carrinho_compras.php">Meu carrinho</a></li>
                     <li><a class="dropdown-item" href="aba_compras.php">Meus pedidos</a></li>
+                    <li><a class="dropdown-item" href="confirmar_compra.php">Confirmar compra</a></li>
                     <li><a class="dropdown-item" href="backend/sair.php">Sair</a></li>
                   </ul>';
                 }
@@ -189,26 +190,28 @@
 
                 $cont = 4;
                 do {
-                    echo '<div class="col">
-                    <div class="card" style="width: 9rem;">
-                    <a style="text-decoration:none; color: black" href="pagina_produto_descricao.php?cod_produto='.$row['cod_produto'].'">
-                        <img src="'.$row['imagem'].'" width="150" height="180" class="card-img-top" alt="...">
-                        <ul class="list-group list-group-flush text-center">
-                            <li class="list-group-item" style="height: 100px;">
-                                <h6 class="card-title"><strong>'.$row['nome_produto'].'</strong></h6>
-                            </li>
-                            <li class="list-group-item" style="height: 33px;">';
-                            if($row['tem_promocao'] == '1') {
-                                echo '<p style="color: green"><b>R$ '.$row['preco_produto']*((100-$row['porc_promocao'])/100).'</b></p>';
-                            } else{
-                                echo '<p>R$ '.$row['preco_produto'].'</p>';
-                            }
-                            echo '</li>
-                        </ul>
-                    </a>    
-                    </div>
-                </div>';
-                    if(!--$cont) break;
+                    if($row['qnt_produto'] > 0) {
+                        echo '<div class="col">
+                        <div class="card" style="width: 9rem;">
+                        <a style="text-decoration:none; color: black" href="pagina_produto_descricao.php?cod_produto='.$row['cod_produto'].'">
+                            <img src="'.$row['imagem'].'" width="150" height="180" class="card-img-top" alt="...">
+                            <ul class="list-group list-group-flush text-center">
+                                <li class="list-group-item" style="height: 100px;">
+                                    <h6 class="card-title"><strong>'.$row['nome_produto'].'</strong></h6>
+                                </li>
+                                <li class="list-group-item" style="height: 33px;">';
+                                if($row['tem_promocao'] == '1') {
+                                    echo '<p style="color: green"><b>R$ '.$row['preco_produto']*((100-$row['porc_promocao'])/100).'</b></p>';
+                                } else{
+                                    echo '<p>R$ '.$row['preco_produto'].'</p>';
+                                }
+                                echo '</li>
+                            </ul>
+                        </a>    
+                        </div>
+                    </div>';
+                        if(!--$cont) break;
+                    }
                 } while($row = mysqli_fetch_array($result));
                 echo '</div>';
             }
