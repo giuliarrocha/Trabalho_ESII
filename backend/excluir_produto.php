@@ -18,6 +18,12 @@
     if(isset($_REQUEST['cod_produto'])) {
         $cod_produto = $_REQUEST['cod_produto'];
 
+        $query = "DELETE FROM lista_favorito   WHERE cod_favProduto  = '$cod_produto';";
+        mysqli_query($conexao, $query) or die(mysql_error());
+        $query = "DELETE FROM lista_carrinho  WHERE cod_listaProduto = '$cod_produto';";
+        mysqli_query($conexao, $query) or die(mysql_error());
+        $query = "DELETE FROM lista_compra   WHERE cod_listaProdutoCompra  = '$cod_produto';";
+        mysqli_query($conexao, $query) or die(mysql_error());
 
         $query = "DELETE FROM produto WHERE cod_produto = '$cod_produto';";
         mysqli_query($conexao, $query) or die(mysql_error());
