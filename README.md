@@ -5,6 +5,9 @@ O projeto deve ser executado em servidor local e para executá-lo, deve ser inst
 
 Colaboradores:
 Artur Kyung Min Lee
+
 Giulia Rossatto Rocha
+
 Larissa de Castro Bonadio
+
 Larissa Mayumi Barela Hondo
